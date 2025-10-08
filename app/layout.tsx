@@ -8,9 +8,13 @@ import { ThemeProvider } from "@/lib/theme-provider"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "IngeniumCR - Sistema de Mantenimiento",
+  description: "Sistema de Mantenimiento Industrial - Ingenio Central Romana Corporation",
   generator: "v0.app",
+  icons: {
+    icon: "/images/cr-logo.jpg",
+    apple: "/images/cr-logo.jpg",
+  },
 }
 
 export default function RootLayout({
