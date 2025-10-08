@@ -1,16 +1,25 @@
 import { Suspense } from "react"
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { DashboardStats } from "@/components/dashboard-stats"
 import { RecentAlerts } from "@/components/recent-alerts"
 import { MachineryStatus } from "@/components/machinery-status"
 import { SensorChart } from "@/components/sensor-chart"
 import { MaintenanceSchedule } from "@/components/maintenance-schedule"
+import { LogoutButton } from "@/components/logout-button"
 import { Activity, AlertTriangle, Wrench, Gauge } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default async function DashboardPage() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/login")
+  }
 
   // Fetch dashboard data
   const [{ data: machinery }, { data: alerts }, { data: orders }, { data: sensors }] = await Promise.all([
@@ -60,6 +69,7 @@ export default async function DashboardPage() {
               <Link href="/alerts">
                 <Button variant="outline">Alertas</Button>
               </Link>
+              <LogoutButton />
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Activity className="h-4 w-4" />
                 <span>Sistema Activo</span>

@@ -49,7 +49,9 @@ export default async function MachineryPage({
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        <MachineryFilters />
+        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+          <MachineryFilters />
+        </Suspense>
         <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
           <MachineryList machinery={machinery || []} />
         </Suspense>

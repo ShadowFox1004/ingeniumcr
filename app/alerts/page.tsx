@@ -41,7 +41,9 @@ export default async function AlertsPage({
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        <AlertsFilters />
+        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+          <AlertsFilters />
+        </Suspense>
         <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
           <AlertsList alerts={alerts || []} />
         </Suspense>

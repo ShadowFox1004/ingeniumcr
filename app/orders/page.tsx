@@ -49,7 +49,9 @@ export default async function OrdersPage({
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        <OrdersFilters />
+        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+          <OrdersFilters />
+        </Suspense>
         <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
           <OrdersList orders={orders || []} />
         </Suspense>

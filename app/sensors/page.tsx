@@ -50,7 +50,9 @@ export default async function SensorsPage({
       </header>
 
       <main className="container mx-auto px-6 py-8">
-        <SensorsFilters machinery={machinery || []} />
+        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+          <SensorsFilters machinery={machinery || []} />
+        </Suspense>
         <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
           <SensorsList sensors={sensors || []} />
         </Suspense>
