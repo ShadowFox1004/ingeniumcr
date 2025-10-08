@@ -31,12 +31,13 @@ export default async function OrdersPage({
   const { data: orders } = await query.order("created_at", { ascending: false })
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative">
       {/* Background Image */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
         style={{ backgroundImage: "url('/images/orders-bg.jpg')" }}
       />
+      <div className="fixed inset-0 z-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative z-10">

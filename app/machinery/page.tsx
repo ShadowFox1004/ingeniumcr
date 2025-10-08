@@ -31,12 +31,13 @@ export default async function MachineryPage({
   const { data: machinery } = await query.order("name", { ascending: true })
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative">
       {/* Background Image */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
         style={{ backgroundImage: "url('/images/machinery-bg.jpg')" }}
       />
+      <div className="fixed inset-0 z-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative z-10">

@@ -32,12 +32,13 @@ export default async function SensorsPage({
   const { data: machinery } = await supabase.from("machinery").select("id, name").order("name")
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative">
       {/* Background Image */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
         style={{ backgroundImage: "url('/images/sensors-bg.jpg')" }}
       />
+      <div className="fixed inset-0 z-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative z-10">

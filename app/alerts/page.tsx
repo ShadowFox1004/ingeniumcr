@@ -27,12 +27,13 @@ export default async function AlertsPage({
   const criticalCount = alerts?.filter((a) => a.severity === "critical" && a.status === "active").length || 0
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative">
       {/* Background Image */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
         style={{ backgroundImage: "url('/images/alerts-bg.jpg')" }}
       />
+      <div className="fixed inset-0 z-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative z-10">
