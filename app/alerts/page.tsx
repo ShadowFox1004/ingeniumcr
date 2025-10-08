@@ -27,31 +27,40 @@ export default async function AlertsPage({
   const criticalCount = alerts?.filter((a) => a.severity === "critical" && a.status === "active").length || 0
 
   return (
-    <div className="min-h-screen bg-black">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="mb-4">
-            <BackToDashboardButton />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Sistema de Alertas</h1>
-              <p className="text-sm text-muted-foreground">
-                {activeCount} alertas activas • {criticalCount} críticas
-              </p>
+    <div className="min-h-screen bg-black relative">
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        style={{ backgroundImage: "url('/images/alerts-bg.jpg')" }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10">
+        <header className="border-b border-border bg-card/95 backdrop-blur-sm">
+          <div className="container mx-auto px-6 py-4">
+            <div className="mb-4">
+              <BackToDashboardButton />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Sistema de Alertas</h1>
+                <p className="text-sm text-muted-foreground">
+                  {activeCount} alertas activas • {criticalCount} críticas
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="container mx-auto px-6 py-8">
-        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
-          <AlertsFilters />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
-          <AlertsList alerts={alerts || []} />
-        </Suspense>
-      </main>
+        <main className="container mx-auto px-6 py-8">
+          <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+            <AlertsFilters />
+          </Suspense>
+          <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
+            <AlertsList alerts={alerts || []} />
+          </Suspense>
+        </main>
+      </div>
     </div>
   )
 }

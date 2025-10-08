@@ -31,35 +31,44 @@ export default async function OrdersPage({
   const { data: orders } = await query.order("created_at", { ascending: false })
 
   return (
-    <div className="min-h-screen bg-black">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="mb-4">
-            <BackToDashboardButton />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Órdenes de Mantenimiento</h1>
-              <p className="text-sm text-muted-foreground">{orders?.length || 0} órdenes registradas</p>
-            </div>
-            <Link href="/orders/new">
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Nueva Orden
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-black relative">
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10"
+        style={{ backgroundImage: "url('/images/orders-bg.jpg')" }}
+      />
 
-      <main className="container mx-auto px-6 py-8">
-        <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
-          <OrdersFilters />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
-          <OrdersList orders={orders || []} />
-        </Suspense>
-      </main>
+      {/* Content */}
+      <div className="relative z-10">
+        <header className="border-b border-border bg-card/95 backdrop-blur-sm">
+          <div className="container mx-auto px-6 py-4">
+            <div className="mb-4">
+              <BackToDashboardButton />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Órdenes de Mantenimiento</h1>
+                <p className="text-sm text-muted-foreground">{orders?.length || 0} órdenes registradas</p>
+              </div>
+              <Link href="/orders/new">
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Nueva Orden
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-6 py-8">
+          <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
+            <OrdersFilters />
+          </Suspense>
+          <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse mt-6" />}>
+            <OrdersList orders={orders || []} />
+          </Suspense>
+        </main>
+      </div>
     </div>
   )
 }
