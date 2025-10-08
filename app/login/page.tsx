@@ -42,7 +42,7 @@ export default function LoginPage() {
     <div className="relative min-h-screen w-full flex items-center justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image src="/images/industrial-bg.jpg" alt="Industrial background" fill className="object-cover" priority />
+        <Image src="/images/industrial-bg.png" alt="Industrial background" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
@@ -73,7 +73,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 h-12 border-gray-300 rounded-lg"
+                className="pl-10 h-12 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
               />
             </div>
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 h-12 border-gray-300 rounded-lg"
+                className="pl-10 h-12 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
               />
             </div>
 
