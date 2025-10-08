@@ -27,9 +27,9 @@ export function DarkModeToggle() {
         </button>
 
         <button
-          onClick={() => setMode("light")}
+          onClick={() => setMode("dark")}
           className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
-            mode === "light" ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+            mode === "dark" ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
           }`}
         >
           <Moon className="h-6 w-6" />
