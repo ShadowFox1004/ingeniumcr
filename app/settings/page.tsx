@@ -3,9 +3,10 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 import { ThemeSelector } from "@/components/theme-selector"
+import { DarkModeToggle } from "@/components/dark-mode-toggle"
 import { UserProfileSettings } from "@/components/user-profile-settings"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Palette, User, Bell, Shield } from "lucide-react"
+import { Palette, User, Bell, Shield, Monitor } from "lucide-react"
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -50,8 +51,22 @@ export default async function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Theme Customization Card */}
+          {/* Dark Mode Toggle Card */}
           <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Monitor className="h-5 w-5 text-primary" />
+                <CardTitle>Apariencia</CardTitle>
+              </div>
+              <CardDescription>Ajusta el modo de visualización</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DarkModeToggle />
+            </CardContent>
+          </Card>
+
+          {/* Theme Customization Card */}
+          <Card className="lg:col-span-2">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Palette className="h-5 w-5 text-primary" />
