@@ -1,31 +1,86 @@
 "use client"
-
-import type React from "react"
-
-import { useChat } from "@ai-sdk/react"
-import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai"
-import type { AIChatMessage } from "@/app/api/ai-chat/route"
+import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Bot, User, Loader2, Wrench, Activity, AlertTriangle, ClipboardList, Lightbulb } from "lucide-react"
-import { useState } from "react"
+import { Bot, User, Loader2, Wrench, Activity, AlertTriangle, ClipboardList, Lightbulb, Trash2 } from "lucide-react"
+import { useState, useEffect } from "react"
+
+const STORAGE_KEY = "ingeniumcr_chat_history"
+const EXPIRATION_HOURS = 24
+
+interface StoredChat {
+  messages: any[]
+  timestamp: number
+}
+
+function loadChatHistory() {
+  if (typeof window === "undefined") return []
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (!stored) return []
+
+    const data: StoredChat = JSON.parse(stored)
+    const now = Date.now()
+    const expirationTime = EXPIRATION_HOURS * 60 * 60 * 1000
+
+    // Check if chat history has expired
+    if (now - data.timestamp > expirationTime) {
+      localStorage.removeItem(STORAGE_KEY)
+      return []
+    }
+
+    return data.messages
+  } catch (error) {
+    console.error("[v0] Error loading chat history:", error)
+    return []
+  }
+}
+
+function saveChatHistory(messages: any[]) {
+  if (typeof window === "undefined") return
+
+  try {
+    const data: StoredChat = {
+      messages,
+      timestamp: Date.now(),
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  } catch (error) {
+    console.error("[v0] Error saving chat history:", error)
+  }
+}
+
+function clearChatHistory() {
+  if (typeof window === "undefined") return
+  localStorage.removeItem(STORAGE_KEY)
+}
 
 export function AIChat() {
-  const [inputValue, setInputValue] = useState("")
+  const [mounted, setMounted] = useState(false)
 
-  const { messages, sendMessage, status } = useChat<AIChatMessage>({
-    transport: new DefaultChatTransport({ api: "/api/ai-chat" }),
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+  const initialMessages = mounted ? loadChatHistory() : []
+
+  const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
+    api: "/api/ai-chat",
+    initialMessages,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!inputValue.trim() || status === "in_progress") return
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-    sendMessage({ text: inputValue })
-    setInputValue("")
+  useEffect(() => {
+    if (mounted && messages.length > 0) {
+      saveChatHistory(messages)
+    }
+  }, [messages, mounted])
+
+  const handleClearChat = () => {
+    setMessages([])
+    clearChatHistory()
   }
 
   const getToolIcon = (toolName: string) => {
@@ -59,8 +114,30 @@ export function AIChat() {
     return labels[toolName] || toolName
   }
 
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center h-[600px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col h-[600px]">
+      {messages.length > 0 && (
+        <div className="p-2 border-b flex justify-end">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClearChat}
+            className="text-muted-foreground hover:text-destructive"
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Limpiar conversación
+          </Button>
+        </div>
+      )}
+
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
@@ -94,16 +171,7 @@ export function AIChat() {
                   <div className="flex items-start gap-3">
                     <User className="h-5 w-5 text-primary mt-0.5" />
                     <div className="flex-1">
-                      {message.parts.map((part, index) => {
-                        if (part.type === "text") {
-                          return (
-                            <p key={index} className="text-sm whitespace-pre-wrap">
-                              {part.text}
-                            </p>
-                          )
-                        }
-                        return null
-                      })}
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     </div>
                   </div>
                 </Card>
@@ -112,55 +180,21 @@ export function AIChat() {
                   <div className="flex items-start gap-3">
                     <Bot className="h-5 w-5 text-primary mt-0.5" />
                     <div className="flex-1 space-y-3">
-                      {message.parts.map((part, index) => {
-                        if (part.type === "text") {
-                          return (
-                            <p key={index} className="text-sm whitespace-pre-wrap">
-                              {part.text}
-                            </p>
-                          )
-                        }
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
 
-                        // Handle tool calls
-                        if (part.type.startsWith("tool-")) {
-                          const toolName = part.type.replace("tool-", "")
-
-                          if (part.state === "input-available" || part.state === "input-streaming") {
-                            return (
-                              <div
-                                key={index}
-                                className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 p-2 rounded"
-                              >
-                                {getToolIcon(toolName)}
-                                <span>{getToolLabel(toolName)}...</span>
-                                <Loader2 className="h-3 w-3 animate-spin ml-auto" />
-                              </div>
-                            )
-                          }
-
-                          if (part.state === "output-available") {
-                            return (
-                              <div key={index} className="text-xs bg-muted/30 p-3 rounded border border-border/50">
-                                <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                                  {getToolIcon(toolName)}
-                                  <span className="font-medium">{getToolLabel(toolName)}</span>
-                                </div>
-                                <pre className="text-xs overflow-x-auto">{JSON.stringify(part.output, null, 2)}</pre>
-                              </div>
-                            )
-                          }
-
-                          if (part.state === "output-error") {
-                            return (
-                              <div key={index} className="text-xs bg-destructive/10 text-destructive p-2 rounded">
-                                Error: {part.errorText}
-                              </div>
-                            )
-                          }
-                        }
-
-                        return null
-                      })}
+                      {message.toolInvocations?.map((tool: any, index: number) => (
+                        <div key={index} className="text-xs bg-muted/30 p-3 rounded border border-border/50">
+                          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                            {getToolIcon(tool.toolName)}
+                            <span className="font-medium">{getToolLabel(tool.toolName)}</span>
+                          </div>
+                          {tool.result && (
+                            <pre className="text-xs overflow-x-auto whitespace-pre-wrap">
+                              {JSON.stringify(tool.result, null, 2)}
+                            </pre>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </Card>
@@ -168,7 +202,7 @@ export function AIChat() {
             </div>
           ))}
 
-          {status === "in_progress" && messages[messages.length - 1]?.role === "user" && (
+          {isLoading && (
             <Card className="p-4 mr-12">
               <div className="flex items-start gap-3">
                 <Bot className="h-5 w-5 text-primary mt-0.5" />
@@ -185,14 +219,14 @@ export function AIChat() {
       <div className="p-4 border-t">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={input}
+            onChange={handleInputChange}
             placeholder="Pregunta sobre el sistema de mantenimiento..."
-            disabled={status === "in_progress"}
+            disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" disabled={status === "in_progress" || !inputValue.trim()}>
-            {status === "in_progress" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enviar"}
+          <Button type="submit" disabled={isLoading || !input.trim()}>
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enviar"}
           </Button>
         </form>
       </div>

@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@ai-sdk/react':
-        specifier: latest
+        specifier: 2.0.70
         version: 2.0.70(react@19.0.0)(zod@3.25.67)
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -106,7 +106,7 @@ importers:
         version: 1.5.0(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       ai:
         specifier: latest
-        version: 5.0.70(zod@3.25.67)
+        version: 5.0.71(zod@3.25.67)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.0)
@@ -1512,6 +1512,12 @@ packages:
 
   ai@5.0.70:
     resolution: {integrity: sha512-srJV++Ml1X8I33gTiiJQpq6GUbAv5ivjSzDzzF9SM4d25zq+/m+zTtHBb794tYKTz2PgbJ3oop9+gU50ZdCLbQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
+  ai@5.0.71:
+    resolution: {integrity: sha512-2c9/cXpF7O1K9xOgcoPCMC7Jj5GxVsPHTBhKcV6bqCVKm21P8AiN+rz9zIGopNMDhlEbQxqi8qSgrwCfsW+KMw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -3334,6 +3340,14 @@ snapshots:
   '@vercel/oidc@3.0.2': {}
 
   ai@5.0.70(zod@3.25.67):
+    dependencies:
+      '@ai-sdk/gateway': 1.0.40(zod@3.25.67)
+      '@ai-sdk/provider': 2.0.0
+      '@ai-sdk/provider-utils': 3.0.12(zod@3.25.67)
+      '@opentelemetry/api': 1.9.0
+      zod: 3.25.67
+
+  ai@5.0.71(zod@3.25.67):
     dependencies:
       '@ai-sdk/gateway': 1.0.40(zod@3.25.67)
       '@ai-sdk/provider': 2.0.0
