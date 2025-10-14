@@ -1,5 +1,5 @@
 "use client"
-import { useChat } from "@ai-sdk/react"
+import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -108,7 +108,7 @@ export function AIChat() {
       getActiveSensors: "Leyendo sensores activos",
       getActiveAlerts: "Revisando alertas activas",
       analyzeMachineryHealth: "Analizando salud de maquinaria",
-      getMaintenanceOrders: "Consultando órdenes de mantenimiento",
+      getMaintenanceOrders: "Consultando órdenes de trabajo",
       createMaintenanceRecommendation: "Creando recomendación",
     }
     return labels[toolName] || toolName
