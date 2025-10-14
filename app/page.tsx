@@ -2,14 +2,13 @@ import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { DashboardStats } from "@/components/dashboard-stats"
-import { RecentAlerts } from "@/components/recent-alerts"
 import { MachineryStatus } from "@/components/machinery-status"
-import { SensorChart } from "@/components/sensor-chart"
 import { MaintenanceSchedule } from "@/components/maintenance-schedule"
 import { LogoutButton } from "@/components/logout-button"
 import { Activity, AlertTriangle, Wrench, Gauge, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -130,14 +129,13 @@ export default async function DashboardPage() {
           {/* Main Content Grid */}
           <div className="grid gap-6 lg:grid-cols-2 mb-8">
             <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse" />}>
-              <SensorChart />
+              <SensorMonitoringDashboard />
             </Suspense>
             <MachineryStatus machinery={machinery || []} />
           </div>
 
           {/* Bottom Grid */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <RecentAlerts alerts={alerts || []} />
+          <div className="grid gap-6 lg:grid-cols-1">
             <MaintenanceSchedule orders={orders || []} />
           </div>
         </main>
