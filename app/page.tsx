@@ -5,7 +5,7 @@ import { DashboardStats } from "@/components/dashboard-stats"
 import { MachineryStatus } from "@/components/machinery-status"
 import { MaintenanceSchedule } from "@/components/maintenance-schedule"
 import { LogoutButton } from "@/components/logout-button"
-import { Activity, AlertTriangle, Wrench, Gauge, Settings } from "lucide-react"
+import { Activity, AlertTriangle, Wrench, Gauge, Settings, Bot } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
@@ -76,6 +76,12 @@ export default async function DashboardPage() {
                 </Link>
                 <Link href="/alerts">
                   <Button variant="outline">Alertas</Button>
+                </Link>
+                <Link href="/ai-assistant">
+                  <Button variant="default" className="flex items-center gap-2 bg-primary hover:bg-primary/90">
+                    <Bot className="h-4 w-4" />
+                    Asistente IA
+                  </Button>
                 </Link>
                 <Link href="/settings">
                   <Button variant="outline" size="sm" className="flex items-center gap-2 bg-transparent">
