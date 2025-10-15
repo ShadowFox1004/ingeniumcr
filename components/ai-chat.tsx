@@ -61,18 +61,27 @@ function clearChatHistory() {
 export function AIChat() {
   const [mounted, setMounted] = useState(false)
 
-  const initialMessages = mounted ? loadChatHistory() : []
+  // 1. ELIMINA la variable `initialMessages` de aquí.
+  // const initialMessages = mounted ? loadChatHistory() : []
 
+  // 2. Inicializa `useChat` SIN `initialMessages`.
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     api: "/api/ai-chat",
-    initialMessages,
   })
 
+  // 3. Modifica el useEffect para cargar el historial usando `setMessages`.
   useEffect(() => {
+    // Este efecto se ejecuta solo una vez en el cliente.
     setMounted(true)
-  }, [])
+    const storedMessages = loadChatHistory()
+    if (storedMessages.length > 0) {
+      setMessages(storedMessages)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // El array de dependencias vacío asegura que se ejecute solo una vez.
 
   useEffect(() => {
+    // Este segundo useEffect sigue guardando el historial cuando cambia.
     if (mounted && messages.length > 0) {
       saveChatHistory(messages)
     }
