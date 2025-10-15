@@ -234,7 +234,7 @@ export function AIChat() {
             disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
+          <Button type="submit" disabled={isLoading || !input?.trim()}>
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enviar"}
           </Button>
         </form>
