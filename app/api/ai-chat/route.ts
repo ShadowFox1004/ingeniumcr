@@ -1,4 +1,5 @@
 import { streamText, tool } from "ai"
+import { qwen } from "@ai-sdk/qwen"
 import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
 
@@ -126,7 +127,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json()
 
   const result = streamText({
-    model: "alibaba/qwen-3-14b",
+  model: qwen('alibaba/qwen-3-14b'),
     system: `Eres un asistente de IA especializado en mantenimiento industrial para IngeniumCR (Central Romana Corporation). 
     
 Tu rol es:
