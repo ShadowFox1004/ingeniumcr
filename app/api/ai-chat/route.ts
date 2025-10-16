@@ -126,7 +126,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json()
 
   const result = streamText({
-    model: "openai/gpt-4o-mini",
+    model: "alibaba/qwen-3-14b",
     system: `Eres un asistente de IA especializado en mantenimiento industrial para IngeniumCR (Central Romana Corporation). 
     
 Tu rol es:
