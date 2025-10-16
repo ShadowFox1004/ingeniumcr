@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Bot, User, Loader2, Wrench, Activity, AlertTriangle, ClipboardList, Lightbulb, Trash2 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 
 const STORAGE_KEY = "ingeniumcr_chat_history"
 const EXPIRATION_HOURS = 24
@@ -15,81 +15,50 @@ interface StoredChat {
   timestamp: number
 }
 
-function loadChatHistory() {
-  if (typeof window === "undefined") return []
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return []
-
-    const data: StoredChat = JSON.parse(stored)
-    const now = Date.now()
-    const expirationTime = EXPIRATION_HOURS * 60 * 60 * 1000
-
-    // Check if chat history has expired
-    if (now - data.timestamp > expirationTime) {
-      localStorage.removeItem(STORAGE_KEY)
-      return []
-    }
-
-    return data.messages
-  } catch (error) {
-    console.error("[v0] Error loading chat history:", error)
-    return []
-  }
-}
-
-function saveChatHistory(messages: any[]) {
-  if (typeof window === "undefined") return
-
-  try {
-    const data: StoredChat = {
-      messages,
-      timestamp: Date.now(),
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch (error) {
-    console.error("[v0] Error saving chat history:", error)
-  }
-}
-
-function clearChatHistory() {
-  if (typeof window === "undefined") return
-  localStorage.removeItem(STORAGE_KEY)
-}
-
 export function AIChat() {
-  const [mounted, setMounted] = useState(false)
-
-  // 1. ELIMINA la variable `initialMessages` de aquí.
-  // const initialMessages = mounted ? loadChatHistory() : []
-
-  // 2. Inicializa `useChat` SIN `initialMessages`.
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     api: "/api/ai-chat",
   })
 
-  // 3. Modifica el useEffect para cargar el historial usando `setMessages`.
   useEffect(() => {
-    // Este efecto se ejecuta solo una vez en el cliente.
-    setMounted(true)
-    const storedMessages = loadChatHistory()
-    if (storedMessages.length > 0) {
-      setMessages(storedMessages)
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (!stored) return
+
+      const data: StoredChat = JSON.parse(stored)
+      const now = Date.now()
+      const expirationTime = EXPIRATION_HOURS * 60 * 60 * 1000
+
+      if (now - data.timestamp > expirationTime) {
+        localStorage.removeItem(STORAGE_KEY)
+        return
+      }
+
+      if (data.messages.length > 0) {
+        setMessages(data.messages)
+      }
+    } catch (error) {
+      console.error("[v0] Error loading chat history:", error)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // El array de dependencias vacío asegura que se ejecute solo una vez.
+  }, [setMessages])
 
   useEffect(() => {
-    // Este segundo useEffect sigue guardando el historial cuando cambia.
-    if (mounted && messages.length > 0) {
-      saveChatHistory(messages)
+    if (messages.length > 0) {
+      try {
+        const data: StoredChat = {
+          messages,
+          timestamp: Date.now(),
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+      } catch (error) {
+        console.error("[v0] Error saving chat history:", error)
+      }
     }
-  }, [messages, mounted])
+  }, [messages])
 
   const handleClearChat = () => {
     setMessages([])
-    clearChatHistory()
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   const getToolIcon = (toolName: string) => {
@@ -121,14 +90,6 @@ export function AIChat() {
       createMaintenanceRecommendation: "Creando recomendación",
     }
     return labels[toolName] || toolName
-  }
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center h-[600px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
   }
 
   return (
