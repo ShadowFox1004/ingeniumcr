@@ -10,7 +10,7 @@ import { Suspense } from "react"
 export const metadata: Metadata = {
   title: "IngeniumCR - Sistema de Mantenimiento",
   description: "Sistema de Mantenimiento Industrial - Ingenio Central Romana Corporation",
-  generator: "v0.app",
+  generator: ".com",
   icons: {
     icon: "/images/cr-logo.jpg",
     apple: "/images/cr-logo.jpg",
