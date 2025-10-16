@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { Machinery } from "@/lib/types"
+import { MapPin } from "lucide-react"
 
 interface MachineryStatusProps {
   machinery: Machinery[]
@@ -8,10 +9,10 @@ interface MachineryStatusProps {
 
 export function MachineryStatus({ machinery }: MachineryStatusProps) {
   const statusColors = {
-    operational: "bg-green-500/10 text-green-500 border-green-500/20",
-    maintenance: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-    warning: "bg-orange-500/10 text-orange-500 border-orange-500/20",
-    offline: "bg-red-500/10 text-red-500 border-red-500/20",
+    operational: "bg-green-500/15 text-green-600 dark:text-green-400 border-green-500/30 shadow-green-500/10",
+    maintenance: "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400 border-yellow-500/30 shadow-yellow-500/10",
+    warning: "bg-orange-500/15 text-orange-600 dark:text-orange-400 border-orange-500/30 shadow-orange-500/10",
+    offline: "bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/30 shadow-red-500/10",
   }
 
   const statusLabels = {
@@ -22,19 +23,33 @@ export function MachineryStatus({ machinery }: MachineryStatusProps) {
   }
 
   return (
-    <Card className="p-6 bg-card border-border">
-      <h3 className="text-lg font-semibold text-foreground mb-4">Estado de Maquinarias</h3>
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+    <Card className="p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-xl">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
+        <div>
+          <h3 className="text-xl font-bold text-foreground">Estado de Maquinarias</h3>
+          <p className="text-sm text-muted-foreground mt-1">Monitoreo en tiempo real</p>
+        </div>
+        <Badge variant="outline" className="font-semibold">
+          {machinery.length} Total
+        </Badge>
+      </div>
+
+      <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
         {machinery.map((machine) => (
           <div
             key={machine.id}
-            className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border hover:bg-secondary transition-colors"
+            className="group flex items-center justify-between p-4 bg-gradient-to-r from-secondary/50 to-secondary/30 rounded-xl border border-border/50 hover:border-border hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
           >
-            <div className="flex-1">
-              <p className="font-medium text-foreground text-sm">{machine.name}</p>
-              <p className="text-xs text-muted-foreground">{machine.location}</p>
+            <div className="flex-1 space-y-1">
+              <p className="font-semibold text-foreground">{machine.name}</p>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                <span>{machine.location}</span>
+              </div>
             </div>
-            <Badge className={statusColors[machine.status]}>{statusLabels[machine.status]}</Badge>
+            <Badge className={`${statusColors[machine.status]} font-medium shadow-sm`}>
+              {statusLabels[machine.status]}
+            </Badge>
           </div>
         ))}
       </div>

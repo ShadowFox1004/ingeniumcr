@@ -5,10 +5,11 @@ import { DashboardStats } from "@/components/dashboard-stats"
 import { MachineryStatus } from "@/components/machinery-status"
 import { MaintenanceSchedule } from "@/components/maintenance-schedule"
 import { LogoutButton } from "@/components/logout-button"
-import { Activity, AlertTriangle, Wrench, Gauge, Settings, Bot } from "lucide-react"
+import { AlertTriangle, Wrench, Gauge, Settings, Bot, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
+import Image from "next/image"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -47,74 +48,93 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Background Image */}
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-25"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
       />
-      <div className="fixed inset-0 z-0 bg-black/40" />
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95 backdrop-blur-[2px]" />
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Header */}
-        <header className="border-b border-border bg-card/95 backdrop-blur-sm">
-          <div className="container mx-auto px-6 py-4">
+        <header className="border-b border-border/40 bg-card/80 backdrop-blur-xl shadow-lg">
+          <div className="container mx-auto px-8 py-5">
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Sistema de Mantenimiento</h1>
-                <p className="text-sm text-muted-foreground">Ingenio Central Romana</p>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20">
+                    <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
+                      IngeniumCR
+                    </h1>
+                    <p className="text-xs text-muted-foreground font-medium">Sistema de Mantenimiento Industrial</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
+              <nav className="flex items-center gap-2">
                 <Link href="/machinery">
-                  <Button variant="outline">Maquinarias</Button>
+                  <Button variant="ghost" size="sm" className="font-medium hover:bg-primary/10">
+                    Maquinarias
+                  </Button>
                 </Link>
                 <Link href="/orders">
-                  <Button variant="outline">Órdenes</Button>
+                  <Button variant="ghost" size="sm" className="font-medium hover:bg-primary/10">
+                    Órdenes
+                  </Button>
                 </Link>
                 <Link href="/sensors">
-                  <Button variant="outline">Sensores</Button>
+                  <Button variant="ghost" size="sm" className="font-medium hover:bg-primary/10">
+                    Sensores
+                  </Button>
                 </Link>
                 <Link href="/alerts">
-                  <Button variant="outline">Alertas</Button>
+                  <Button variant="ghost" size="sm" className="font-medium hover:bg-primary/10">
+                    Alertas
+                  </Button>
                 </Link>
+                <div className="h-6 w-px bg-border/50 mx-2" />
                 <Link href="/ai-assistant">
-                  <Button variant="default" className="flex items-center gap-2 bg-primary hover:bg-primary/90">
-                    <Bot className="h-4 w-4" />
+                  <Button
+                    size="sm"
+                    className="font-medium bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25"
+                  >
+                    <Bot className="h-4 w-4 mr-2" />
                     Asistente IA
                   </Button>
                 </Link>
                 <Link href="/settings">
-                  <Button variant="outline" size="sm" className="flex items-center gap-2 bg-transparent">
+                  <Button variant="ghost" size="sm" className="font-medium">
                     <Settings className="h-4 w-4" />
-                    Ajustes
                   </Button>
                 </Link>
                 <LogoutButton />
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Activity className="h-4 w-4" />
-                  <span>Sistema Activo</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-xs font-medium text-green-600 dark:text-green-400">Sistema Activo</span>
                 </div>
-              </div>
+              </nav>
             </div>
           </div>
         </header>
 
-        <main className="container mx-auto px-6 py-8">
-          {/* Stats Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <main className="container mx-auto px-8 py-8 space-y-8">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <DashboardStats
               title="Total Maquinarias"
               value={totalMachinery}
               icon={<Gauge className="h-5 w-5" />}
               description={`${operationalCount} operacionales`}
               trend="neutral"
+              color="blue"
             />
             <DashboardStats
               title="Alertas Activas"
               value={activeAlerts}
               icon={<AlertTriangle className="h-5 w-5" />}
-              description={`${warningCount} maquinarias en advertencia`}
+              description={`${warningCount} en advertencia`}
               trend={activeAlerts > 0 ? "down" : "neutral"}
+              color="red"
             />
             <DashboardStats
               title="Órdenes Pendientes"
@@ -122,28 +142,30 @@ export default async function DashboardPage() {
               icon={<Wrench className="h-5 w-5" />}
               description={`${maintenanceCount} en mantenimiento`}
               trend="neutral"
+              color="orange"
             />
             <DashboardStats
               title="Eficiencia"
               value={`${Math.round((operationalCount / totalMachinery) * 100)}%`}
-              icon={<Activity className="h-5 w-5" />}
+              icon={<TrendingUp className="h-5 w-5" />}
               description="Disponibilidad operativa"
               trend={operationalCount / totalMachinery > 0.8 ? "up" : "down"}
+              color="green"
             />
           </div>
 
-          {/* Main Content Grid */}
-          <div className="grid gap-6 lg:grid-cols-2 mb-8">
-            <Suspense fallback={<div className="h-96 bg-card rounded-lg animate-pulse" />}>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Suspense
+              fallback={
+                <div className="h-[600px] bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 animate-pulse" />
+              }
+            >
               <SensorMonitoringDashboard />
             </Suspense>
             <MachineryStatus machinery={machinery || []} />
           </div>
 
-          {/* Bottom Grid */}
-          <div className="grid gap-6 lg:grid-cols-1">
-            <MaintenanceSchedule orders={orders || []} />
-          </div>
+          <MaintenanceSchedule orders={orders || []} />
         </main>
       </div>
     </div>
