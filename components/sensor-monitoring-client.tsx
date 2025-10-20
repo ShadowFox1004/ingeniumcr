@@ -34,7 +34,7 @@ function CircularGauge({ value, max, label, unit, color = "#10b981" }: any) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative w-36 h-36">
+      <div className="relative w-40 h-40">
         <svg className="w-full h-full transform -rotate-90">
           <defs>
             <linearGradient id={`gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -42,13 +42,13 @@ function CircularGauge({ value, max, label, unit, color = "#10b981" }: any) {
               <stop offset="100%" stopColor={gaugeColor} stopOpacity="1" />
             </linearGradient>
           </defs>
-          <circle cx="72" cy="72" r="50" stroke="hsl(var(--muted))" strokeWidth="10" fill="none" opacity="0.15" />
+          <circle cx="80" cy="80" r="50" stroke="hsl(var(--muted))" strokeWidth="12" fill="none" opacity="0.15" />
           <circle
-            cx="72"
-            cy="72"
+            cx="80"
+            cy="80"
             r="50"
             stroke={`url(#gradient-${label})`}
-            strokeWidth="10"
+            strokeWidth="12"
             fill="none"
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
@@ -58,8 +58,8 @@ function CircularGauge({ value, max, label, unit, color = "#10b981" }: any) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-foreground">{value}</span>
-          <span className="text-xs text-muted-foreground font-medium">{unit}</span>
+          <span className="text-4xl font-bold text-foreground leading-none">{value}</span>
+          <span className="text-sm text-muted-foreground font-medium mt-1">{unit}</span>
         </div>
       </div>
       {label && <p className="text-sm text-muted-foreground mt-3 font-medium">{label}</p>}
@@ -70,7 +70,7 @@ function CircularGauge({ value, max, label, unit, color = "#10b981" }: any) {
 function MetricCard({ icon, label, value, unit, color = "#10b981" }: any) {
   return (
     <div
-      className="relative flex items-center gap-4 p-5 rounded-xl bg-gradient-to-br from-card to-card/50 border-l-4 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] overflow-hidden group"
+      className="relative flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br from-card to-card/50 border-l-4 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] overflow-hidden group"
       style={{ borderColor: color }}
     >
       <div
@@ -78,16 +78,16 @@ function MetricCard({ icon, label, value, unit, color = "#10b981" }: any) {
         style={{ background: `linear-gradient(135deg, ${color}20 0%, transparent 100%)` }}
       />
       <div
-        className="p-3 rounded-xl bg-gradient-to-br from-muted/80 to-muted/40 shadow-sm"
+        className="p-2.5 rounded-lg bg-gradient-to-br from-muted/80 to-muted/40 shadow-sm flex-shrink-0"
         style={{ boxShadow: `0 0 20px ${color}20` }}
       >
         {icon}
       </div>
-      <div className="flex-1 relative z-10">
-        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">{label}</p>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-bold text-foreground">{value}</span>
-          <span className="text-sm text-muted-foreground font-medium">{unit}</span>
+      <div className="flex-1 min-w-0 relative z-10">
+        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide mb-0.5 truncate">{label}</p>
+        <div className="flex items-baseline gap-1">
+          <span className="text-xl font-bold text-foreground leading-none">{value}</span>
+          <span className="text-xs text-muted-foreground font-medium">{unit}</span>
         </div>
       </div>
     </div>
@@ -178,7 +178,7 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
               <CircularGauge value={12} max={100} label="" unit="" color="#10b981" />
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold text-green-500 drop-shadow-lg">Good</span>
-                <span className="text-xl text-muted-foreground font-semibold">12</span>
+                <span className="text-xl text-muted-foreground font-semibold mt-2">12</span>
               </div>
             </div>
           </div>
@@ -197,28 +197,28 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
 
           <div className="grid grid-cols-2 gap-4">
             <MetricCard
-              icon={<Droplets className="h-6 w-6 text-blue-500" />}
+              icon={<Droplets className="h-5 w-5 text-blue-500" />}
               label="Humedad"
               value={humidity.toFixed(1)}
               unit="%"
               color="#3b82f6"
             />
             <MetricCard
-              icon={<Volume2 className="h-6 w-6 text-purple-500" />}
-              label="Nivel de Ruido"
+              icon={<Volume2 className="h-5 w-5 text-purple-500" />}
+              label="Nivel Ruido"
               value={pressure.toFixed(1)}
               unit="dB"
               color="#8b5cf6"
             />
             <MetricCard
-              icon={<Wind className="h-6 w-6 text-cyan-500" />}
+              icon={<Wind className="h-5 w-5 text-cyan-500" />}
               label="PM 2.5"
               value={vibration.toFixed(1)}
               unit="µg/m³"
               color="#06b6d4"
             />
             <MetricCard
-              icon={<GaugeIcon className="h-6 w-6 text-green-500" />}
+              icon={<GaugeIcon className="h-5 w-5 text-green-500" />}
               label="TVOC Index"
               value="100"
               unit=""
@@ -229,46 +229,46 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-sm font-semibold text-foreground">Área de Molienda A</h4>
+        <Card className="p-5 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="mb-3">
+            <h4 className="text-sm font-semibold text-foreground truncate">Área de Molienda A</h4>
             <p className="text-xs text-muted-foreground">Temperatura</p>
           </div>
           <CircularGauge value={temperature1.toFixed(1)} max={120} label="" unit="°F" />
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-sm font-semibold text-foreground">Área de Molienda A</h4>
+        <Card className="p-5 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="mb-3">
+            <h4 className="text-sm font-semibold text-foreground truncate">Área de Molienda A</h4>
             <p className="text-xs text-muted-foreground">Presión</p>
           </div>
           <div className="flex items-end gap-2 mb-3">
-            <span className="text-3xl font-bold text-foreground">446</span>
-            <span className="text-sm text-muted-foreground mb-1.5 font-medium">ppm</span>
+            <span className="text-3xl font-bold text-foreground leading-none">446</span>
+            <span className="text-sm text-muted-foreground mb-0.5 font-medium">ppm</span>
           </div>
-          <div className="h-28">
+          <div className="h-24">
             <MiniLineChart data={tempData1} color="#10b981" label="pressure1" />
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-sm font-semibold text-foreground">Área de Molienda B</h4>
+        <Card className="p-5 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="mb-3">
+            <h4 className="text-sm font-semibold text-foreground truncate">Área de Molienda B</h4>
             <p className="text-xs text-muted-foreground">Temperatura</p>
           </div>
           <CircularGauge value={temperature2.toFixed(1)} max={120} label="" unit="°F" />
         </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-sm font-semibold text-foreground">Área de Molienda B</h4>
+        <Card className="p-5 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="mb-3">
+            <h4 className="text-sm font-semibold text-foreground truncate">Área de Molienda B</h4>
             <p className="text-xs text-muted-foreground">Vibración</p>
           </div>
           <div className="flex items-end gap-2 mb-3">
-            <span className="text-3xl font-bold text-foreground">679</span>
-            <span className="text-sm text-muted-foreground mb-1.5 font-medium">Hz</span>
+            <span className="text-3xl font-bold text-foreground leading-none">679</span>
+            <span className="text-sm text-muted-foreground mb-0.5 font-medium">Hz</span>
           </div>
-          <div className="h-28">
+          <div className="h-24">
             <MiniLineChart data={tempData2} color="#10b981" label="vibration2" />
           </div>
         </Card>
