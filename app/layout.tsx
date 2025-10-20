@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { ThemeProvider } from "@/lib/theme-provider"
 import { Suspense } from "react"
+import { AppHeader } from "@/components/app-header"
 
 export const metadata: Metadata = {
   title: "IngeniumCR - Sistema de Mantenimiento",
@@ -26,7 +27,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <AppHeader />
+            {children}
+          </ThemeProvider>
         </Suspense>
         <Analytics />
       </body>

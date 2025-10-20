@@ -42,7 +42,8 @@ export default async function SensorsPage({
 
       {/* Content */}
       <div className="relative z-10">
-        <header className="border-b border-border bg-card/95 backdrop-blur-sm">
+        {/* Page Header */}
+        <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-6 py-4">
             <div className="mb-4">
               <BackToDashboardButton />
@@ -60,7 +61,7 @@ export default async function SensorsPage({
               </Link>
             </div>
           </div>
-        </header>
+        </div>
 
         <main className="container mx-auto px-6 py-8">
           <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>

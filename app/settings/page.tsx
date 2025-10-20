@@ -20,8 +20,8 @@ export default async function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
+      {/* Page Header */}
+      <div className="border-b border-border bg-card">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -31,7 +31,7 @@ export default async function SettingsPage() {
             <BackToDashboardButton />
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-6 py-8">
         <div className="grid gap-6 lg:grid-cols-2">

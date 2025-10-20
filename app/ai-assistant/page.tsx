@@ -18,7 +18,8 @@ export default function AIAssistantPage() {
 
       {/* Content */}
       <div className="relative z-10">
-        <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        {/* Page Header */}
+        <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container px-4 sm:px-6 py-4">
             <div className="mb-4">
               <BackToDashboardButton />
@@ -34,7 +35,7 @@ export default function AIAssistantPage() {
               </div>
             </div>
           </div>
-        </header>
+        </div>
 
         <main className="container px-4 sm:px-6 py-6">
           <div className="grid gap-6 lg:grid-cols-3">

@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
-import { MobileNav } from "@/components/mobile-nav"
-import Image from "next/image"
+import { AppHeader } from "@/components/app-header"
 
 export default async function MachineryPage({
   searchParams,
@@ -43,21 +42,12 @@ export default async function MachineryPage({
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Mobile Responsive Header */}
-        <header className="border-b border-border bg-card/95 backdrop-blur-sm">
+        {/* Global AppHeader */}
+        <AppHeader />
+
+        {/* Page Header */}
+        <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="relative h-10 w-10 rounded-lg overflow-hidden shadow-lg">
-                  <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
-                </div>
-                <div>
-                  <h1 className="text-lg sm:text-xl font-bold text-foreground">IngeniumCR</h1>
-                  <p className="text-xs text-muted-foreground hidden sm:block">Sistema de Mantenimiento Industrial</p>
-                </div>
-              </div>
-              <MobileNav />
-            </div>
             <div className="mb-4">
               <BackToDashboardButton />
             </div>
@@ -76,7 +66,7 @@ export default async function MachineryPage({
               </Link>
             </div>
           </div>
-        </header>
+        </div>
 
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
