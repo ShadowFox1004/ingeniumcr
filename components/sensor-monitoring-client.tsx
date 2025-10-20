@@ -182,8 +182,8 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
           </div>
         </Card>
 
-        <Card className="p-8 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-sm border-border/50 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-          <div className="mb-6">
+        <Card className="p-6 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-sm border-border/50 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+          <div className="mb-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 rounded-lg bg-primary/10">
                 <Activity className="h-5 w-5 text-primary" />
@@ -193,7 +193,7 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
             <p className="text-sm text-muted-foreground">Métricas ambientales en tiempo real</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <MetricCard
               icon={<Droplets className="h-5 w-5 text-blue-500" />}
               label="Humedad"
@@ -226,48 +226,54 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="mb-4">
-            <h4 className="text-base font-semibold text-foreground">Área de Molienda A</h4>
-            <p className="text-xs text-muted-foreground mt-1">Temperatura</p>
+            <h4 className="text-lg font-semibold text-foreground">Área de Molienda A</h4>
+            <p className="text-xs text-muted-foreground mt-1">Temperatura y Presión</p>
           </div>
-          <CircularGauge value={temperature1.toFixed(1)} max={120} label="" unit="°F" />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col items-center">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Temperatura</p>
+              <CircularGauge value={temperature1.toFixed(1)} max={120} label="" unit="°F" />
+            </div>
+
+            <div className="flex flex-col">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Presión</p>
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="text-4xl font-bold text-foreground">446</span>
+                <span className="text-base text-muted-foreground font-medium">ppm</span>
+              </div>
+              <div className="h-24 flex-1">
+                <MiniLineChart data={tempData1} color="#10b981" label="pressure1" />
+              </div>
+            </div>
+          </div>
         </Card>
 
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="mb-4">
-            <h4 className="text-base font-semibold text-foreground">Área de Molienda A</h4>
-            <p className="text-xs text-muted-foreground mt-1">Presión</p>
+            <h4 className="text-lg font-semibold text-foreground">Área de Molienda B</h4>
+            <p className="text-xs text-muted-foreground mt-1">Temperatura y Vibración</p>
           </div>
-          <div className="flex items-baseline gap-2 mb-4">
-            <span className="text-4xl font-bold text-foreground">446</span>
-            <span className="text-base text-muted-foreground font-medium">ppm</span>
-          </div>
-          <div className="h-28">
-            <MiniLineChart data={tempData1} color="#10b981" label="pressure1" />
-          </div>
-        </Card>
 
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-base font-semibold text-foreground">Área de Molienda B</h4>
-            <p className="text-xs text-muted-foreground mt-1">Temperatura</p>
-          </div>
-          <CircularGauge value={temperature2.toFixed(1)} max={120} label="" unit="°F" />
-        </Card>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col items-center">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Temperatura</p>
+              <CircularGauge value={temperature2.toFixed(1)} max={120} label="" unit="°F" />
+            </div>
 
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div className="mb-4">
-            <h4 className="text-base font-semibold text-foreground">Área de Molienda B</h4>
-            <p className="text-xs text-muted-foreground mt-1">Vibración</p>
-          </div>
-          <div className="flex items-baseline gap-2 mb-4">
-            <span className="text-4xl font-bold text-foreground">679</span>
-            <span className="text-base text-muted-foreground font-medium">Hz</span>
-          </div>
-          <div className="h-28">
-            <MiniLineChart data={tempData2} color="#10b981" label="vibration2" />
+            <div className="flex flex-col">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Vibración</p>
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="text-4xl font-bold text-foreground">679</span>
+                <span className="text-base text-muted-foreground font-medium">Hz</span>
+              </div>
+              <div className="h-24 flex-1">
+                <MiniLineChart data={tempData2} color="#10b981" label="vibration2" />
+              </div>
+            </div>
           </div>
         </Card>
       </div>

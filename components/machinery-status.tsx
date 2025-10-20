@@ -23,8 +23,8 @@ export function MachineryStatus({ machinery }: MachineryStatusProps) {
   }
 
   return (
-    <Card className="p-6 bg-card/80 backdrop-blur-sm border-border/50 shadow-xl">
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/50">
+    <Card className="p-5 bg-card/80 backdrop-blur-sm border-border/50 shadow-xl h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50 flex-shrink-0">
         <div className="flex-1 min-w-0">
           <h3 className="text-xl font-bold text-foreground truncate">Estado de Maquinarias</h3>
           <p className="text-sm text-muted-foreground mt-1">Monitoreo en tiempo real</p>
@@ -34,20 +34,22 @@ export function MachineryStatus({ machinery }: MachineryStatusProps) {
         </Badge>
       </div>
 
-      <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+      <div className="space-y-2 flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
         {machinery.map((machine) => (
           <div
             key={machine.id}
-            className="group flex items-center justify-between gap-3 p-4 bg-gradient-to-r from-secondary/50 to-secondary/30 rounded-xl border border-border/50 hover:border-border hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            className="group flex items-center justify-between gap-3 p-3 bg-gradient-to-r from-secondary/50 to-secondary/30 rounded-xl border border-border/50 hover:border-border hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
           >
-            <div className="flex-1 min-w-0 space-y-1">
-              <p className="font-semibold text-foreground truncate">{machine.name}</p>
+            <div className="flex-1 min-w-0 space-y-0.5">
+              <p className="font-semibold text-foreground truncate text-sm">{machine.name}</p>
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <MapPin className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate">{machine.location}</span>
               </div>
             </div>
-            <Badge className={`${statusColors[machine.status]} font-medium shadow-sm flex-shrink-0 whitespace-nowrap`}>
+            <Badge
+              className={`${statusColors[machine.status]} font-medium shadow-sm flex-shrink-0 whitespace-nowrap text-xs px-2 py-1`}
+            >
               {statusLabels[machine.status]}
             </Badge>
           </div>
