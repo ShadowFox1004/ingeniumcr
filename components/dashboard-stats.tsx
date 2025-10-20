@@ -49,21 +49,23 @@ export function DashboardStats({ title, value, icon, description, trend, color =
 
   return (
     <Card
-      className={`relative overflow-hidden p-6 bg-card/80 backdrop-blur-sm border-border/50 hover:border-border transition-all duration-300 hover:shadow-xl ${variant.shadow} group`}
+      className={`relative overflow-hidden p-4 sm:p-6 bg-card/80 backdrop-blur-sm border-border/50 hover:border-border transition-all duration-300 hover:shadow-xl ${variant.shadow} group`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${variant.gradient} opacity-50`} />
 
       <div className="relative flex items-start justify-between">
-        <div className="flex-1 space-y-3">
-          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{title}</p>
-          <p className="text-4xl font-bold text-foreground tracking-tight">{value}</p>
+        <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
+          <p className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">
+            {title}
+          </p>
+          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">{value}</p>
           <div className="flex items-center gap-2">
-            <p className="text-xs text-muted-foreground font-medium">{description}</p>
+            <p className="text-xs text-muted-foreground font-medium truncate">{description}</p>
             {trendIcon[trend]}
           </div>
         </div>
         <div
-          className={`p-3 rounded-xl ${variant.icon} shadow-lg transition-transform duration-300 group-hover:scale-110`}
+          className={`p-2 sm:p-3 rounded-xl ${variant.icon} shadow-lg transition-transform duration-300 group-hover:scale-110 flex-shrink-0`}
         >
           {icon}
         </div>

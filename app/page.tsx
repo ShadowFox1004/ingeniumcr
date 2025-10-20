@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
 import Image from "next/image"
+import { MobileNav } from "@/components/mobile-nav"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -57,22 +58,24 @@ export default async function DashboardPage() {
       {/* Content */}
       <div className="relative z-10">
         <header className="border-b border-border/40 bg-card/80 backdrop-blur-xl shadow-lg">
-          <div className="container mx-auto px-8 py-5">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20">
-                    <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-                      IngeniumCR
-                    </h1>
-                    <p className="text-xs text-muted-foreground font-medium">Sistema de Mantenimiento Industrial</p>
-                  </div>
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20 flex-shrink-0">
+                  <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
+                </div>
+                <div className="min-w-0">
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent truncate">
+                    IngeniumCR
+                  </h1>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-medium hidden sm:block">
+                    Sistema de Mantenimiento Industrial
+                  </p>
                 </div>
               </div>
-              <nav className="flex items-center gap-2">
+
+              {/* Desktop Navigation */}
+              <nav className="hidden lg:flex items-center gap-2">
                 <Link href="/machinery">
                   <Button variant="ghost" size="sm" className="font-medium hover:bg-primary/10">
                     Maquinarias
@@ -114,12 +117,15 @@ export default async function DashboardPage() {
                   <span className="text-xs font-medium text-green-600 dark:text-green-400">Sistema Activo</span>
                 </div>
               </nav>
+
+              {/* Mobile Navigation */}
+              <MobileNav />
             </div>
           </div>
         </header>
 
-        <main className="container mx-auto px-8 py-8 space-y-8">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <DashboardStats
               title="Total Maquinarias"
               value={totalMachinery}
@@ -154,10 +160,10 @@ export default async function DashboardPage() {
             />
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
             <Suspense
               fallback={
-                <div className="h-[600px] bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 animate-pulse" />
+                <div className="h-[400px] sm:h-[600px] bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 animate-pulse" />
               }
             >
               <SensorMonitoringDashboard />
