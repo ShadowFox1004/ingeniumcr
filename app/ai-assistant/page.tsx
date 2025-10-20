@@ -19,28 +19,30 @@ export default function AIAssistantPage() {
       {/* Content */}
       <div className="relative z-10">
         <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="container px-4 sm:px-6 py-4">
+            <div className="mb-4">
               <BackToDashboardButton />
-              <div className="flex items-center gap-2">
-                <Bot className="h-6 w-6 text-primary" />
-                <h1 className="text-2xl font-bold">Asistente de IA</h1>
-              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Sparkles className="h-4 w-4" />
-              <span>Powered by GPT-5</span>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                <h1 className="text-xl sm:text-2xl font-bold">Asistente de IA</h1>
+              </div>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>Powered by Qwen</span>
+              </div>
             </div>
           </div>
         </header>
 
-        <main className="container py-6">
+        <main className="container px-4 sm:px-6 py-6">
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Chat con el Asistente</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-lg sm:text-xl">Chat con el Asistente</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
                     Interactúa con la IA para analizar maquinarias y obtener recomendaciones
                   </CardDescription>
                 </CardHeader>
@@ -53,7 +55,7 @@ export default function AIAssistantPage() {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Ejemplos de Consultas</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Ejemplos de Consultas</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="text-sm space-y-2">
@@ -87,10 +89,10 @@ export default function AIAssistantPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Capacidades</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Capacidades</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-muted-foreground space-y-2">
+                  <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
                       <span className="text-primary">✓</span>
                       <span>Acceso en tiempo real a datos de sensores</span>

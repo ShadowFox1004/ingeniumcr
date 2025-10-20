@@ -42,17 +42,19 @@ export default async function MachineryPage({
       {/* Content */}
       <div className="relative z-10">
         <header className="border-b border-border bg-card/95 backdrop-blur-sm">
-          <div className="container mx-auto px-6 py-4">
+          <div className="container mx-auto px-4 sm:px-6 py-4">
             <div className="mb-4">
               <BackToDashboardButton />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Gestión de Maquinarias</h1>
-                <p className="text-sm text-muted-foreground">{machinery?.length || 0} maquinarias registradas</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Gestión de Maquinarias</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {machinery?.length || 0} maquinarias registradas
+                </p>
               </div>
-              <Link href="/machinery/new">
-                <Button className="gap-2">
+              <Link href="/machinery/new" className="w-full sm:w-auto">
+                <Button className="gap-2 w-full sm:w-auto">
                   <Plus className="h-4 w-4" />
                   Nueva Maquinaria
                 </Button>
@@ -61,7 +63,7 @@ export default async function MachineryPage({
           </div>
         </header>
 
-        <main className="container mx-auto px-6 py-8">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
             <MachineryFilters />
           </Suspense>

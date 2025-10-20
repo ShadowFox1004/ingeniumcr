@@ -38,14 +38,14 @@ export default async function AlertsPage({
       {/* Content */}
       <div className="relative z-10">
         <header className="border-b border-border bg-card/95 backdrop-blur-sm">
-          <div className="container mx-auto px-6 py-4">
+          <div className="container mx-auto px-4 sm:px-6 py-4">
             <div className="mb-4">
               <BackToDashboardButton />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Sistema de Alertas</h1>
-                <p className="text-sm text-muted-foreground">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Sistema de Alertas</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   {activeCount} alertas activas • {criticalCount} críticas
                 </p>
               </div>
@@ -53,7 +53,7 @@ export default async function AlertsPage({
           </div>
         </header>
 
-        <main className="container mx-auto px-6 py-8">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <Suspense fallback={<div className="h-20 bg-card rounded-lg animate-pulse" />}>
             <AlertsFilters />
           </Suspense>
