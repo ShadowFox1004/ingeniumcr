@@ -59,17 +59,17 @@ export function OrdersList({ orders }: OrdersListProps) {
   return (
     <div className="grid gap-4 mt-6">
       {orders.map((order) => (
-        <Card key={order.id} className="p-6 bg-card border-border hover:bg-secondary/50 transition-colors">
-          <div className="flex items-start justify-between">
+        <Card key={order.id} className="p-4 sm:p-6 bg-card border-border hover:bg-secondary/50 transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <h3 className="text-lg font-semibold text-foreground">{order.title}</h3>
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground w-full sm:w-auto">{order.title}</h3>
                 <Badge className={statusColors[order.status]}>{statusLabels[order.status]}</Badge>
                 <Badge className={priorityColors[order.priority]}>{order.priority.toUpperCase()}</Badge>
                 <Badge variant="outline">{typeLabels[order.type]}</Badge>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-3">
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Maquinaria</p>
                   <p className="text-sm text-foreground font-medium">{order.machinery?.name || "No asignada"}</p>
@@ -96,14 +96,14 @@ export function OrdersList({ orders }: OrdersListProps) {
               {order.description && <p className="text-sm text-muted-foreground">{order.description}</p>}
             </div>
 
-            <div className="flex gap-2 ml-4">
-              <Link href={`/orders/${order.id}`}>
-                <Button variant="outline" size="icon">
+            <div className="flex sm:flex-col gap-2">
+              <Link href={`/orders/${order.id}`} className="flex-1 sm:flex-none">
+                <Button variant="outline" size="icon" className="w-full sm:w-auto bg-transparent">
                   <Eye className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href={`/orders/${order.id}/edit`}>
-                <Button variant="outline" size="icon">
+              <Link href={`/orders/${order.id}/edit`} className="flex-1 sm:flex-none">
+                <Button variant="outline" size="icon" className="w-full sm:w-auto bg-transparent">
                   <Edit className="h-4 w-4" />
                 </Button>
               </Link>

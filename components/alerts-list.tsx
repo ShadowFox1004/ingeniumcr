@@ -97,22 +97,22 @@ export function AlertsList({ alerts }: AlertsListProps) {
   return (
     <div className="grid gap-4 mt-6">
       {alerts.map((alert) => (
-        <Card key={alert.id} className="p-6 bg-card border-border hover:bg-secondary/50 transition-colors">
-          <div className="flex items-start gap-4">
-            <div className={`p-3 rounded-lg ${severityConfig[alert.severity].className}`}>
+        <Card key={alert.id} className="p-4 sm:p-6 bg-card border-border hover:bg-secondary/50 transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+            <div className={`p-3 rounded-lg ${severityConfig[alert.severity].className} self-start`}>
               {severityConfig[alert.severity].icon}
             </div>
 
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-lg font-semibold text-foreground">{alert.alert_type}</h3>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground">{alert.alert_type}</h3>
                 <Badge className={severityConfig[alert.severity].className}>{alert.severity.toUpperCase()}</Badge>
                 <Badge className={statusColors[alert.status]}>{statusLabels[alert.status]}</Badge>
               </div>
 
               <p className="text-sm text-muted-foreground mb-3">{alert.message}</p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm">
                 <div>
                   <p className="text-muted-foreground">Maquinaria</p>
                   <p className="text-foreground font-medium">{alert.machinery?.name || "No especificada"}</p>
@@ -138,23 +138,33 @@ export function AlertsList({ alerts }: AlertsListProps) {
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Link href={`/alerts/${alert.id}`}>
-                <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+            <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
+              <Link href={`/alerts/${alert.id}`} className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="gap-2 bg-transparent w-full">
                   <Eye className="h-4 w-4" />
-                  Ver
+                  <span className="sm:inline">Ver</span>
                 </Button>
               </Link>
               {alert.status === "active" && (
-                <Button variant="outline" size="sm" onClick={() => handleAcknowledge(alert.id)} className="gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleAcknowledge(alert.id)}
+                  className="gap-2 flex-1 sm:flex-none w-full"
+                >
                   <Check className="h-4 w-4" />
-                  Reconocer
+                  <span className="sm:inline">Reconocer</span>
                 </Button>
               )}
               {alert.status !== "resolved" && (
-                <Button variant="outline" size="sm" onClick={() => handleResolve(alert.id)} className="gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleResolve(alert.id)}
+                  className="gap-2 flex-1 sm:flex-none w-full"
+                >
                   <Check className="h-4 w-4" />
-                  Resolver
+                  <span className="sm:inline">Resolver</span>
                 </Button>
               )}
             </div>

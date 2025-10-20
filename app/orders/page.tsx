@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
+import { MobileNav } from "@/components/mobile-nav"
+import Image from "next/image"
 
 export default async function OrdersPage({
   searchParams,
@@ -43,12 +45,24 @@ export default async function OrdersPage({
       <div className="relative z-10">
         <header className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="relative h-10 w-10 rounded-lg overflow-hidden shadow-lg">
+                  <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
+                </div>
+                <div>
+                  <h1 className="text-lg sm:text-xl font-bold text-foreground">IngeniumCR</h1>
+                  <p className="text-xs text-muted-foreground hidden sm:block">Sistema de Mantenimiento Industrial</p>
+                </div>
+              </div>
+              <MobileNav />
+            </div>
             <div className="mb-4">
               <BackToDashboardButton />
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Órdenes de Mantenimiento</h1>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">Órdenes de Mantenimiento</h2>
                 <p className="text-xs sm:text-sm text-muted-foreground">{orders?.length || 0} órdenes registradas</p>
               </div>
               <Link href="/orders/new" className="w-full sm:w-auto">
