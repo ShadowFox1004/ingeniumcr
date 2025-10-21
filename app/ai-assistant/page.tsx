@@ -1,6 +1,5 @@
 import { AIChat } from "@/components/ai-chat"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 import { Bot, Sparkles } from "lucide-react"
 
 export default function AIAssistantPage() {
@@ -21,9 +20,6 @@ export default function AIAssistantPage() {
         {/* Page Header */}
         <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container px-4 sm:px-6 py-4">
-            <div className="mb-4">
-              <BackToDashboardButton />
-            </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />

@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 import { ThemeSelector } from "@/components/theme-selector"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
 import { UserProfileSettings } from "@/components/user-profile-settings"
@@ -23,12 +22,9 @@ export default async function SettingsPage() {
       {/* Page Header */}
       <div className="border-b border-border bg-card">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Configuración</h1>
-              <p className="text-sm text-muted-foreground">Personaliza tu experiencia</p>
-            </div>
-            <BackToDashboardButton />
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Configuración</h1>
+            <p className="text-sm text-muted-foreground">Personaliza tu experiencia</p>
           </div>
         </div>
       </div>

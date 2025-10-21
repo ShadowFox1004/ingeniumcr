@@ -5,7 +5,6 @@ import { MachineryFilters } from "@/components/machinery-filters"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { AppHeader } from "@/components/app-header"
 
 export default async function MachineryPage({
   searchParams,
@@ -41,9 +40,6 @@ export default async function MachineryPage({
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Global AppHeader */}
-        <AppHeader />
-
         {/* Page Header */}
         <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4">
