@@ -25,7 +25,7 @@ export function MobileNav() {
           </SheetHeader>
           <div className="flex flex-col gap-4 mt-6">
 
-            <Link href="/dashboard" onClick={() => setOpen(false)}>
+            <Link href="/" onClick={() => setOpen(false)}>
               <Button variant="ghost" className="w-full justify-start font-medium">
                 <LayoutDashboard className="h-4 w-4 mr-3" />
                 Dashboard
