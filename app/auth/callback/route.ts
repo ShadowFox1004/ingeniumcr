@@ -9,9 +9,14 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = await createClient()
-    await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+    if (error) {
+      console.error("[v0] Error exchanging code for session:", error)
+      // Redirect to error page if verification fails
+      return NextResponse.redirect(`${origin}/auth/verify-email?error=verification_failed`)
+    }
   }
 
-  // Redirect to dashboard after successful verification
   return NextResponse.redirect(`${origin}/auth/verification-success`)
 }
