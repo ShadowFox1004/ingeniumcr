@@ -28,7 +28,14 @@ export default function LoginPage() {
         email,
         password,
       })
-      if (error) throw error
+      if (error) {
+        if (error.message.includes("Email not confirmed")) {
+          setError("Por favor verifica tu correo electrónico antes de iniciar sesión")
+        } else {
+          throw error
+        }
+        return
+      }
       router.push("/")
       router.refresh()
     } catch (error: unknown) {

@@ -29,15 +29,32 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Redirect to login if not authenticated and not on auth pages
-  if (!user && !request.nextUrl.pathname.startsWith("/login") && !request.nextUrl.pathname.startsWith("/auth")) {
+  const publicPaths = [
+    "/login",
+    "/auth/sign-up",
+    "/auth/sign-up-success",
+    "/auth/callback",
+    "/auth/verify-email",
+    "/auth/verification-success",
+  ]
+  const isPublicPath = publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))
+
+  // Redirect to login if not authenticated and not on public pages
+  if (!user && !isPublicPath) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)
   }
 
-  // Redirect to dashboard if authenticated and on login page
-  if (user && request.nextUrl.pathname === "/login") {
+  // Redirect to verify email page if user is authenticated but email not confirmed
+  if (user && !user.email_confirmed_at && !isPublicPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/auth/verify-email"
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect to dashboard if authenticated with verified email and on login page
+  if (user && user.email_confirmed_at && request.nextUrl.pathname === "/login") {
     const url = request.nextUrl.clone()
     url.pathname = "/"
     return NextResponse.redirect(url)

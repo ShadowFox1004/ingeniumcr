@@ -23,6 +23,7 @@ export function MobileNav() {
           <SheetHeader>
             <SheetTitle>Menú</SheetTitle>
           </SheetHeader>
+          <Image src="/images/cr-logo.jpg" alt="Logo"/>
           <div className="flex flex-col gap-4 mt-6">
 
             <Link href="/" onClick={() => setOpen(false)}>
