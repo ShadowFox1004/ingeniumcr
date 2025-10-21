@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Bot, Settings, AlertTriangle, Wrench, Gauge, Activity } from "lucide-react"
+import { Menu, Bot, Settings, AlertTriangle, Wrench, Gauge, Activity, LayoutDashboard } from "lucide-react"
 import Link from "next/link"
 import { LogoutButton } from "@/components/logout-button"
 
@@ -21,15 +21,24 @@ export function MobileNav() {
         </SheetTrigger>
         <SheetContent side="right" className="w-[280px] sm:w-[320px]">
           <SheetHeader>
-            <SheetTitle>Menú de Navegación</SheetTitle>
+            <SheetTitle>Menú</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-4 mt-6">
+
+            <Link href="/dashboard" onClick={() => setOpen(false)}>
+              <Button variant="ghost" className="w-full justify-start font-medium">
+                <LayoutDashboard className="h-4 w-4 mr-3" />
+                Dashboard
+              </Button>
+            </Link>
+
             <Link href="/machinery" onClick={() => setOpen(false)}>
               <Button variant="ghost" className="w-full justify-start font-medium">
                 <Gauge className="h-4 w-4 mr-3" />
                 Maquinarias
               </Button>
             </Link>
+
             <Link href="/orders" onClick={() => setOpen(false)}>
               <Button variant="ghost" className="w-full justify-start font-medium">
                 <Wrench className="h-4 w-4 mr-3" />
