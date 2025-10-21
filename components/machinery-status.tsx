@@ -23,7 +23,7 @@ export function MachineryStatus({ machinery }: MachineryStatusProps) {
   }
 
   return (
-    <Card className="p-5 bg-card/80 backdrop-blur-sm border-border/50 shadow-xl h-full max-h-[700px] flex flex-col">
+    <Card className="p-5 bg-card/80 backdrop-blur-sm border-border/50 shadow-xl h-full max-h-[900px] flex flex-col">
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/50 flex-shrink-0">
         <div className="flex-1 min-w-0">
           <h3 className="text-xl font-bold text-foreground truncate">Estado de Maquinarias</h3>
