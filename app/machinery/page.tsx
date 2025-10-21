@@ -5,7 +5,6 @@ import { MachineryFilters } from "@/components/machinery-filters"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 import { AppHeader } from "@/components/app-header"
 
 export default async function MachineryPage({
@@ -48,9 +47,6 @@ export default async function MachineryPage({
         {/* Page Header */}
         <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="mb-4">
-              <BackToDashboardButton />
-            </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-foreground">Gestión de Maquinarias</h2>

@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Bot, Settings } from "lucide-react"
+import { Bot, Settings, LayoutDashboard } from "lucide-react"
 import { LogoutButton } from "@/components/logout-button"
 import { MobileNav } from "@/components/mobile-nav"
 import { usePathname } from "next/navigation"
@@ -36,6 +36,16 @@ export function AppHeader() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-2">
+            <Link href="/">
+              <Button
+                variant={pathname === "/" ? "default" : "ghost"}
+                size="sm"
+                className="font-medium hover:bg-primary/10"
+              >
+                <LayoutDashboard className="h-4 w-4 mr-2" />
+                Dashboard
+              </Button>
+            </Link>
             <Link href="/machinery">
               <Button
                 variant={pathname === "/machinery" ? "default" : "ghost"}

@@ -6,7 +6,6 @@ import { MachineryStatus } from "@/components/machinery-status"
 import { MaintenanceSchedule } from "@/components/maintenance-schedule"
 import { AlertTriangle, Wrench, Gauge, TrendingUp } from "lucide-react"
 import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
-import { AppHeader } from "@/components/app-header"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -53,8 +52,6 @@ export default async function DashboardPage() {
 
       {/* Content */}
       <div className="relative z-10">
-        <AppHeader />
-
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8">
           <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <DashboardStats

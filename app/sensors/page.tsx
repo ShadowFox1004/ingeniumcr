@@ -5,7 +5,7 @@ import { SensorsFilters } from "@/components/sensors-filters"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
+// import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 
 export default async function SensorsPage({
   searchParams,
@@ -45,9 +45,9 @@ export default async function SensorsPage({
         {/* Page Header */}
         <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-6 py-4">
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <BackToDashboardButton />
-            </div>
+            </div> */}
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Monitoreo de Sensores</h1>

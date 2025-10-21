@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { AlertsList } from "@/components/alerts-list"
 import { AlertsFilters } from "@/components/alerts-filters"
-import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
+// import { BackToDashboardButton } from "@/components/back-to-dashboard-button"
 
 export default async function AlertsPage({
   searchParams,
@@ -40,9 +40,9 @@ export default async function AlertsPage({
         {/* Page Header */}
         <div className="border-b border-border bg-card/95 backdrop-blur-sm">
           <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <BackToDashboardButton />
-            </div>
+            </div> */}
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-foreground">Sistema de Alertas</h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
