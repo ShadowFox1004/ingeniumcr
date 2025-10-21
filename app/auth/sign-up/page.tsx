@@ -52,7 +52,7 @@ export default function SignUpPage() {
     <div className="relative min-h-screen w-full flex items-center justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image src="/images/industrial-bg.jpg" alt="Industrial background" fill className="object-cover" priority />
+        <Image src="/images/login-bg.jpg" alt="Industrial background" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-black/20" />
       </div>
 

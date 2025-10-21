@@ -6,7 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { ThemeProvider } from "@/lib/theme-provider"
 import { Suspense } from "react"
-import { AppHeader } from "@/components/app-header"
+import { ConditionalHeader } from "@/components/conditional-header"
 
 export const metadata: Metadata = {
   title: "IngeniumCR - Sistema de Mantenimiento",
@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>
           <ThemeProvider>
-            <AppHeader />
+            <ConditionalHeader />
             {children}
           </ThemeProvider>
         </Suspense>
