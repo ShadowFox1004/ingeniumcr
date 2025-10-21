@@ -151,7 +151,7 @@ export function SensorMonitoringClient({ latestReadings, chartData }: SensorMoni
       <div className="flex items-center justify-between pb-4 border-b border-border/50">
         <div>
           <h2 className="text-3xl font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-            Monitoreo de Sensores - Áreas de Producción
+            Sensores - Áreas de Producción
           </h2>
           <p className="text-sm text-muted-foreground mt-1">Datos en tiempo real de todas las áreas industriales</p>
         </div>
