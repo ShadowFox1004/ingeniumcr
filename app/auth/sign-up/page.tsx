@@ -32,7 +32,25 @@ export default function SignUpPage() {
     }
 
     try {
-      const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || window.location.origin
+      // Get the base URL - prefer env var, fallback to window origin only in production
+      const getRedirectUrl = () => {
+        // If dev redirect URL is set, use it (should be your deployed URL)
+        if (process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL) {
+          return process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL
+        }
+        // In production, use window.location.origin
+        if (typeof window !== "undefined") {
+          const origin = window.location.origin
+          // Don't use localhost URLs in email redirects
+          if (!origin.includes("localhost")) {
+            return origin
+          }
+        }
+        // Fallback - this should be replaced with your actual deployed URL
+        return "https://ingeniumcr3sh.vercel.app"
+      }
+
+      const redirectUrl = getRedirectUrl()
 
       const { error } = await supabase.auth.signUp({
         email,
