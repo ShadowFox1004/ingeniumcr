@@ -4,8 +4,9 @@ import { redirect } from "next/navigation"
 import { ThemeSelector } from "@/components/theme-selector"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
 import { UserProfileSettings } from "@/components/user-profile-settings"
+import { DeleteAccountDialog } from "@/components/delete-account-dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Palette, User, Bell, Shield, Monitor } from "lucide-react"
+import { Palette, User, Bell, Shield, Monitor, Trash2 } from "lucide-react"
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -136,6 +137,29 @@ export default async function SettingsPage() {
                   <p className="text-sm text-muted-foreground">
                     Última sesión: {new Date().toLocaleDateString("es-ES")}
                   </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Delete Account Card */}
+          <Card className="border-destructive/50 lg:col-span-2">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Trash2 className="h-5 w-5 text-destructive" />
+                <CardTitle className="text-destructive">Zona de Peligro</CardTitle>
+              </div>
+              <CardDescription>Acciones irreversibles de la cuenta</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <p className="font-medium mb-2">Eliminar Cuenta</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, asegúrate de que realmente quieres
+                    hacer esto.
+                  </p>
+                  <DeleteAccountDialog />
                 </div>
               </div>
             </CardContent>
