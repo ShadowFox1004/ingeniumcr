@@ -1,0 +1,6 @@
+Nombre: Molino de caña #1
+Ubicación: Área de molienda
+Especificaciones:
+- Capacidad: 100 toneladas por hora
+- Último mantenimiento: 15/01/2024
+Próximo mantenimiento programado: 15/03/2024

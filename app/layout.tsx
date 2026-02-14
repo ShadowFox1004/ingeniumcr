@@ -24,12 +24,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className="h-full">
+      <body
+        className={`h-full flex flex-col overflow-hidden font-sans ${GeistSans.variable} ${GeistMono.variable}`}
+      >
         <Suspense fallback={null}>
           <ThemeProvider>
             <ConditionalHeader />
-            {children}
+            
+            {/* Contenedor real de páginas */}
+            <div className="flex-1 overflow-hidden">
+              {children}
+            </div>
+
           </ThemeProvider>
         </Suspense>
         <Analytics />
