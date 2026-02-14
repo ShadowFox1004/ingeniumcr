@@ -4,25 +4,34 @@ import OpenAI from 'openai';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const openaiApiKey = process.env.OPENAI_API_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
-const openai = new OpenAI({ apiKey: openaiApiKey });
+
+// Función para obtener el cliente de OpenAI
+function getOpenAIClient() {
+  const openaiApiKey = process.env.OPENAI_API_KEY;
+  if (!openaiApiKey) {
+    throw new Error('The OPENAI_API_KEY environment variable is missing or empty');
+  }
+  return new OpenAI({ apiKey: openaiApiKey });
+}
 
 // Función para generar embeddings
 async function getEmbedding(text: string) {
+  const openai = getOpenAIClient();
   const response = await openai.embeddings.create({
     model: "text-embedding-ada-002",
     input: text,
   });
   return response.data[0].embedding;
 }
+
 // Verificar credenciales al inicio
-if (!supabaseUrl || !supabaseKey || !openaiApiKey) {
+if (!supabaseUrl || !supabaseKey) {
   console.error('Faltan variables de entorno necesarias:', {
     hasSupabaseUrl: !!supabaseUrl,
     hasSupabaseKey: !!supabaseKey,
-    hasOpenaiKey: !!openaiApiKey
+    hasOpenaiKey: !!process.env.OPENAI_API_KEY
   });
 }
 
@@ -58,7 +67,7 @@ async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
 export async function POST(req: Request) {
   try {
     // Verificar credenciales
-    if (!supabaseUrl || !supabaseKey || !openaiApiKey) {
+    if (!supabaseUrl || !supabaseKey || !process.env.OPENAI_API_KEY) {
       throw new Error('Configuración incompleta. Verifica las variables de entorno.');
     }
  
@@ -74,6 +83,7 @@ export async function POST(req: Request) {
       .join('\n\n');
 
     // 3. Generar respuesta con el contexto
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
