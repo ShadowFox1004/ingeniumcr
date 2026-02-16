@@ -68,7 +68,13 @@ export async function POST(req: Request) {
   try {
     // Verificar credenciales
     if (!supabaseUrl || !supabaseKey || !process.env.OPENAI_API_KEY) {
-      throw new Error('Configuración incompleta. Verifica las variables de entorno.');
+      // Respuesta temporal para debugging
+      return NextResponse.json({ 
+        response: {
+          role: "assistant",
+          content: "⚠️ Configuración incompleta. Por favor configura las variables de entorno en Vercel: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY"
+        } 
+      });
     }
  
     const { messages } = await req.json();
