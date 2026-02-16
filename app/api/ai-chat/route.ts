@@ -2,10 +2,17 @@ import { NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Función para obtener el cliente de Supabase
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Faltan variables de entorno de Supabase');
+  }
+  
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 // Función para obtener el cliente de OpenAI
 function getOpenAIClient() {
@@ -26,15 +33,6 @@ async function getEmbedding(text: string) {
   return response.data[0].embedding;
 }
 
-// Verificar credenciales al inicio
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Faltan variables de entorno necesarias:', {
-    hasSupabaseUrl: !!supabaseUrl,
-    hasSupabaseKey: !!supabaseKey,
-    hasOpenaiKey: !!process.env.OPENAI_API_KEY
-  });
-}
-
 // Interfaz para los documentos
 interface Document {
   id: number;
@@ -49,6 +47,7 @@ interface Document {
 // Función para buscar documentos similares
 async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
   const embedding = await getEmbedding(query);
+  const supabase = getSupabaseClient();
   
   const { data: documents, error } = await supabase.rpc('match_documents', {
     query_embedding: embedding,
@@ -65,19 +64,31 @@ async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
 }
 
 export async function POST(req: Request) {
+  console.log("=== AI Chat API Called ===");
+  
   try {
+    // Log environment variables (sin mostrar valores sensibles)
+    console.log("Environment check:", {
+      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      hasOpenaiKey: !!process.env.OPENAI_API_KEY,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 20) + "..."
+    });
+
+    const { messages } = await req.json();
+    console.log("Messages received:", messages.length);
+    
     // Verificar credenciales
-    if (!supabaseUrl || !supabaseKey || !process.env.OPENAI_API_KEY) {
-      // Respuesta temporal para debugging
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || !process.env.OPENAI_API_KEY) {
+      console.log("Missing environment variables detected");
       return NextResponse.json({ 
         response: {
           role: "assistant",
-          content: "⚠️ Configuración incompleta. Por favor configura las variables de entorno en Vercel: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          content: "⚠️ Configuración incompleta. Faltan variables de entorno en Vercel. Necesitas: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY"
         } 
       });
     }
  
-    const { messages } = await req.json();
     const lastMessage = messages[messages.length - 1]?.content || "";
 
     // 1. Buscar documentos relevantes
