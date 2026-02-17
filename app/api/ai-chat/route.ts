@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import Groq from 'groq-sdk';
+// import OpenAI from 'openai';
 
 // Función para obtener el cliente de Supabase
 function getSupabaseClient() {
@@ -14,19 +15,25 @@ function getSupabaseClient() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
-// Función para obtener el cliente de OpenAI
-function getOpenAIClient() {
-  const openaiApiKey = process.env.OPENAI_API_KEY;
-  if (!openaiApiKey) {
-    throw new Error('The OPENAI_API_KEY environment variable is missing or empty');
-  }
-  return new OpenAI({ apiKey: openaiApiKey });
+function getGroqClient() {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("Missing GROQ_API_KEY");
+  return new Groq({ apiKey });
 }
+// // Función para obtener el cliente de OpenAI
+// function getOpenAIClient() {
+//   const openaiApiKey = process.env.OPENAI_API_KEY;
+//   if (!openaiApiKey) {
+//     throw new Error('The OPENAI_API_KEY environment variable is missing or empty');
+//   }
+//   return new OpenAI({ apiKey: openaiApiKey });
+// }
 
 // Función para generar embeddings
 async function getEmbedding(text: string) {
-  const openai = getOpenAIClient();
-  const response = await openai.embeddings.create({
+  const groq = getGroqClient();
+  // const openai = getOpenAIClient();
+  const response = await groq.embeddings.create({
     model: "text-embedding-ada-002",
     input: text,
   });
@@ -46,22 +53,24 @@ interface Document {
 
 // Función para buscar documentos similares
 async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
-  const embedding = await getEmbedding(query);
-  const supabase = getSupabaseClient();
-  
-  const { data: documents, error } = await supabase.rpc('match_documents', {
-    query_embedding: embedding,
-    match_threshold: 0.5,
-    match_count: limit
-  });
-
-  if (error) {
-    console.error('Error searching documents:', error);
-    return [];
-  }
-
-  return documents || [];
+  return [];
 }
+//   const embedding = await getEmbedding(query);
+//   const supabase = getSupabaseClient();
+  
+//   const { data: documents, error } = await supabase.rpc('match_documents', {
+//     query_embedding: embedding,
+//     match_threshold: 0.5,
+//     match_count: limit
+//   });
+
+//   if (error) {
+//     console.error('Error searching documents:', error);
+//     return [];
+//   }
+
+//   return documents || [];
+// }
 
 export async function POST(req: Request) {
   console.log("=== AI Chat API Called ===");
@@ -71,7 +80,7 @@ export async function POST(req: Request) {
     console.log("Environment check:", {
       hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
       hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      hasOpenaiKey: !!process.env.OPENAI_API_KEY,
+      hasGroqKey: !!process.env.GROQ_API_KEY,
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 20) + "..."
     });
 
@@ -79,12 +88,12 @@ export async function POST(req: Request) {
     console.log("Messages received:", messages.length);
     
     // Verificar credenciales
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || !process.env.OPENAI_API_KEY) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || !process.env.GROQ_API_KEY) {
       console.log("Missing environment variables detected");
       return NextResponse.json({ 
         response: {
           role: "assistant",
-          content: "⚠️ Configuración incompleta. Faltan variables de entorno en Vercel. Necesitas: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          content: "⚠️ Configuración incompleta. Faltan variables de entorno en Vercel. Necesitas: GROQ_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY"
         } 
       });
     }
@@ -100,27 +109,29 @@ export async function POST(req: Request) {
       .join('\n\n');
 
     // 3. Generar respuesta con el contexto
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `Eres un asistente de mantenimiento industrial. 
-          Usa la siguiente información para responder. Si no sabes la respuesta, di que no tienes suficiente información.
-          
-          Información del contexto:
-          ${context}`
-        },
-        { role: "user", content: lastMessage }
-      ],
-      temperature: 0.7,
-    });
+    const groq = getGroqClient();
+const completion = await groq.chat.completions.create({
+  model: "llama-3.1-8b-instant",
+  messages: [
+    {
+      role: "system",
+      content: `Eres un asistente de mantenimiento industrial.
+      Usa la siguiente información para responder. Si no sabes la respuesta, di que no tienes suficiente información.
+
+      Información del contexto:
+      ${context}`,
+    },
+    { role: "user", content: lastMessage },
+  ],
+  temperature: 0.7,
+});
+
+const answer = completion.choices[0]?.message?.content ?? "No se pudo obtener una respuesta";
 
     return NextResponse.json({ 
       response: {
         role: "assistant",
-        content: completion.choices[0].message.content
+        content: answer
       } 
     });
 
