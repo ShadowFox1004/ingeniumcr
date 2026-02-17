@@ -45,11 +45,15 @@ export function AIChat() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.error || `Error ${response.status}: ${response.statusText}`
-        );
-      }
+  const errorData = await response.json().catch(() => ({}));
+  console.error("API error data:", errorData);
+ 
+  throw new Error(
+    errorData?.details ||
+    errorData?.error ||
+    `Error ${response.status}: ${response.statusText}`
+  );
+}
 
       const data = await response.json();
       const assistantMessage: Message = {
@@ -59,11 +63,15 @@ export function AIChat() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
+        } catch (error) {
       console.error("Error:", error);
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
-        content: `Error: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        content: `Error: ${
+          error instanceof Error
+            ? error.message
+            : 'Error desconocido'
+        }`,
         role: "assistant",
       };
       setMessages((prev) => [...prev, errorMessage]);
