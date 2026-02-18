@@ -37,52 +37,22 @@ export default function SignUpPage() {
         ? window.location.origin 
         : 'https://ingeniumcrdash.vercel.app'
 
-      // Create user with metadata but don't send Supabase's default email
+      // Create user - Supabase will send verification email automatically
+      // Make sure to configure SMTP in Supabase Dashboard for custom email sending
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${redirectUrl}/auth/callback`,
           data: {
-            full_name: email.split('@')[0], // Temporary name from email
+            full_name: email.split('@')[0],
           }
         },
       })
       
       if (signUpError) throw signUpError
       
-      if (data.user) {
-        // Send custom verification email using our endpoint
-        const username = email.split('@')[0]
-        
-        try {
-          const verificationResponse = await fetch('/api/email/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email,
-              username,
-              userId: data.user.id,
-            }),
-          })
-
-          // Check if response is OK and has JSON content
-          if (!verificationResponse.ok) {
-            let errorData
-            try {
-              errorData = await verificationResponse.json()
-            } catch {
-              errorData = { error: `HTTP ${verificationResponse.status}` }
-            }
-            console.error('Error sending verification email:', errorData)
-            // Continue anyway - user is created
-          }
-        } catch (fetchError) {
-          console.error('Network error sending verification:', fetchError)
-          // Continue - user was created even if email fails
-        }
-      }
-      
+      // User created successfully - Supabase handles verification email
       router.push("/auth/sign-up-success")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Error al crear cuenta")
