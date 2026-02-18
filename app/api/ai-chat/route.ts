@@ -51,6 +51,30 @@ interface Document {
   similarity?: number;
 }
 
+type AnalysisType =
+  | "estado_general"
+  | "alertas_activas"
+  | "sensores_anormales"
+  | "desconocido";
+
+function detectAnalysisType(question: string): AnalysisType {
+  const q = question.toLowerCase();
+
+  if (q.includes("estado actual") || q.includes("todas las maquinarias")) {
+    return "estado_general";
+  }
+
+  if (q.includes("alertas activas") || q.includes("alertas")) {
+    return "alertas_activas";
+  }
+
+  if (q.includes("sensor") || q.includes("sensores")) {
+    return "sensores_anormales";
+  }
+
+  return "desconocido";
+}
+
 // Función para buscar documentos similares
 async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
   return [];
@@ -71,6 +95,68 @@ async function searchDocuments(query: string, limit = 3): Promise<Document[]> {
 
 //   return documents || [];
 // }
+
+async function getMachinesStatusSummary() {
+  const supabase = getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("machinery")
+    .select("id, name, type, location, status")
+    .order("name", { ascending: true });
+
+  if (error || !data) {
+    console.error("Error fetching machinery status:", error);
+    return "No se pudo obtener la información de las maquinarias.";
+  }
+
+  if (data.length === 0) {
+    return "No hay maquinarias registradas en el sistema.";
+  }
+
+  return [
+    "[ESTADO GENERAL DE MAQUINARIAS]",
+    ...data.map(
+      (m) =>
+        `Máquina: ${m.name} | Tipo: ${m.type ?? "N/A"} | Ubicación: ${
+          m.location ?? "N/A"
+        } | Estado: ${m.status ?? "desconocido"}`
+    ),
+  ].join("\n");
+}
+
+async function getActiveAlertsSummary() {
+  const supabase = getSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("alerts")
+    .select(
+      "id, machinery_id, alert_type, severity, message, status, created_at"
+    )
+    .eq("status", "active") // ajusta si usas otro valor
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error || !data) {
+    console.error("Error fetching alerts:", error);
+    return "No se pudo obtener la información de alertas.";
+  }
+
+  if (data.length === 0) {
+    return "Actualmente no hay alertas activas en el sistema.";
+  }
+
+  return [
+    "[ALERTAS ACTIVAS]",
+    ...data.map(
+      (a) =>
+        `Alerta: ${a.alert_type ?? "N/A"} | Severidad: ${
+          a.severity ?? "N/A"
+        } | Máquina ID: ${a.machinery_id ?? "N/A"} | Mensaje: ${
+          a.message ?? ""
+        } | Creada: ${a.created_at ?? "N/A"}`
+    ),
+  ].join("\n");
+}
 
 export async function POST(req: Request) {
   console.log("=== AI Chat API Called ===");
@@ -100,13 +186,41 @@ export async function POST(req: Request) {
  
     const lastMessage = messages[messages.length - 1]?.content || "";
 
+    const analysisType = detectAnalysisType(lastMessage);
+
+const contextParts: string[] = [];
+
+if (analysisType === "estado_general") {
+  contextParts.push(await getMachinesStatusSummary());
+}
+
+if (analysisType === "alertas_activas") {
+  contextParts.push(await getActiveAlertsSummary());
+}
+
+// RAG/documentos – por ahora searchDocuments() devuelve []
+const relevantDocs = await searchDocuments(lastMessage);
+if (relevantDocs.length > 0) {
+  const ragContext = relevantDocs
+    .map(
+      (doc: Document) =>
+        `Documento: ${doc.content}\nFuente: ${
+          doc.metadata?.source || "Desconocida"
+        }`
+    )
+    .join("\n\n");
+  contextParts.push("[DOCUMENTACIÓN RELEVANTE]", ragContext);
+}
+
+const context = contextParts.join("\n\n");
+
     // 1. Buscar documentos relevantes
-    const relevantDocs = await searchDocuments(lastMessage);
+    // const relevantDocs = await searchDocuments(lastMessage);
     
     // 2. Crear el contexto
-    const context = relevantDocs
-      .map((doc: Document) => `Documento: ${doc.content}\nFuente: ${doc.metadata?.source || 'Desconocida'}`)
-      .join('\n\n');
+    // const context = relevantDocs
+    //   .map((doc: Document) => `Documento: ${doc.content}\nFuente: ${doc.metadata?.source || 'Desconocida'}`)
+    //   .join('\n\n');
 
     // 3. Generar respuesta con el contexto
     const groq = getGroqClient();
