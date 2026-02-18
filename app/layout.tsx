@@ -26,14 +26,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`h-full flex flex-col overflow-hidden font-sans ${GeistSans.variable} ${GeistMono.variable}`}
+        className={`min-h-screen flex flex-col overflow-y-auto font-sans ${GeistSans.variable} ${GeistMono.variable}`}
       >
         <Suspense fallback={null}>
           <ThemeProvider>
             <ConditionalHeader />
             
             {/* Contenedor real de páginas */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1">
               {children}
             </div>
 
