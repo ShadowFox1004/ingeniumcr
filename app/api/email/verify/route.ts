@@ -1,11 +1,28 @@
 import { NextResponse } from 'next/server'
 import { sendEmail, emailTemplates } from '@/lib/email'
-import { createClient } from '@/lib/supabase/server'
 
 // POST /api/email/verify - Enviar email de verificación personalizado
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
+    // Verificar Content-Type
+    const contentType = request.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Content-Type debe ser application/json' },
+        { status: 400 }
+      )
+    }
+
+    let body
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json(
+        { error: 'JSON inválido en el body' },
+        { status: 400 }
+      )
+    }
+    
     const { email, username, userId } = body
 
     if (!email || !username || !userId) {
@@ -15,9 +32,15 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generar token de verificación
-    const supabase = await createClient()
-    
+    // Verificar configuración SMTP
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      console.error('SMTP configuration missing')
+      return NextResponse.json(
+        { error: 'Configuración SMTP incompleta. Revisa tu .env.local' },
+        { status: 500 }
+      )
+    }
+
     // Crear URL de verificación
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const verificationUrl = `${baseUrl}/auth/callback?token=${userId}&type=signup`

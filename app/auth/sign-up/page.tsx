@@ -54,19 +54,32 @@ export default function SignUpPage() {
       if (data.user) {
         // Send custom verification email using our endpoint
         const username = email.split('@')[0]
-        const verificationResponse = await fetch('/api/email/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            username,
-            userId: data.user.id,
-          }),
-        })
+        
+        try {
+          const verificationResponse = await fetch('/api/email/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              username,
+              userId: data.user.id,
+            }),
+          })
 
-        if (!verificationResponse.ok) {
-          console.error('Error sending verification email:', await verificationResponse.json())
-          // Continue anyway - user is created
+          // Check if response is OK and has JSON content
+          if (!verificationResponse.ok) {
+            let errorData
+            try {
+              errorData = await verificationResponse.json()
+            } catch {
+              errorData = { error: `HTTP ${verificationResponse.status}` }
+            }
+            console.error('Error sending verification email:', errorData)
+            // Continue anyway - user is created
+          }
+        } catch (fetchError) {
+          console.error('Network error sending verification:', fetchError)
+          // Continue - user was created even if email fails
         }
       }
       
