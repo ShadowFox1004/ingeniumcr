@@ -77,3 +77,68 @@ export interface MaintenanceHistory {
   notes: string | null
   machinery?: Machinery
 }
+
+// Chat System Types
+export interface UserProfile {
+  id: string
+  username: string | null
+  full_name: string | null
+  avatar_url: string | null
+  status: 'online' | 'offline' | 'away'
+  last_seen: string
+  created_at: string
+  updated_at: string
+}
+
+export interface UserContact {
+  id: string
+  user_id: string
+  contact_id: string
+  status: 'pending' | 'accepted' | 'blocked'
+  created_at: string
+  updated_at: string
+  contact?: UserProfile
+}
+
+export interface Conversation {
+  id: string
+  created_at: string
+  updated_at: string
+  participants?: ConversationParticipant[]
+  last_message?: Message
+  unread_count?: number
+}
+
+export interface ConversationParticipant {
+  id: string
+  conversation_id: string
+  user_id: string
+  joined_at: string
+  last_read_at: string
+  user?: UserProfile
+}
+
+export interface Message {
+  id: string
+  conversation_id: string
+  sender_id: string
+  content: string
+  message_type: 'text' | 'image' | 'file' | 'system'
+  status: 'sent' | 'delivered' | 'read'
+  reply_to: string | null
+  created_at: string
+  expires_at: string
+  deleted_at: string | null
+  sender?: UserProfile
+  attachments?: MessageAttachment[]
+}
+
+export interface MessageAttachment {
+  id: string
+  message_id: string
+  file_name: string
+  file_url: string
+  file_type: string
+  file_size: number
+  created_at: string
+}

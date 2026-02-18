@@ -32,16 +32,44 @@ export default function SignUpPage() {
     }
 
     try {
-      const redirectUrl = "https://ingeniumcrdash.vercel.app"
+      // Use current origin for redirect (works for both local and production)
+      const redirectUrl = typeof window !== 'undefined' 
+        ? window.location.origin 
+        : 'https://ingeniumcrdash.vercel.app'
 
-      const { error } = await supabase.auth.signUp({
+      // Create user with metadata but don't send Supabase's default email
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${redirectUrl}/auth/callback`,
+          data: {
+            full_name: email.split('@')[0], // Temporary name from email
+          }
         },
       })
-      if (error) throw error
+      
+      if (signUpError) throw signUpError
+      
+      if (data.user) {
+        // Send custom verification email using our endpoint
+        const username = email.split('@')[0]
+        const verificationResponse = await fetch('/api/email/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            username,
+            userId: data.user.id,
+          }),
+        })
+
+        if (!verificationResponse.ok) {
+          console.error('Error sending verification email:', await verificationResponse.json())
+          // Continue anyway - user is created
+        }
+      }
+      
       router.push("/auth/sign-up-success")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Error al crear cuenta")

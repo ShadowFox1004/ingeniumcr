@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Bot, Settings, AlertTriangle, Wrench, Gauge, Activity, LayoutDashboard } from "lucide-react"
+import { Menu, Bot, Settings, AlertTriangle, Wrench, Gauge, Activity, LayoutDashboard, MessageSquare } from "lucide-react"
 import Link from "next/link"
 import { LogoutButton } from "@/components/logout-button"
 
@@ -59,6 +59,13 @@ export function MobileNav() {
             </Link>
 
             <div className="h-px bg-border my-2" />
+
+            <Link href="/chat" onClick={() => setOpen(false)}>
+              <Button variant="ghost" className="w-full justify-start font-medium">
+                <MessageSquare className="h-4 w-4 mr-3" />
+                Chat
+              </Button>
+            </Link>
 
             <Link href="/ai-assistant" onClick={() => setOpen(false)}>
               <Button className="w-full justify-start font-medium bg-gradient-to-r from-primary to-primary/80">
