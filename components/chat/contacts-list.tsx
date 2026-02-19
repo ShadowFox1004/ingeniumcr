@@ -20,12 +20,16 @@ interface ContactsListProps {
   onSelectContact: (contact: UserProfile) => void
   selectedContactId?: string
   onStartConversation: (contactId: string) => Promise<void>
+  currentUserId: string
+  isMobile: boolean
 }
 
-export function ContactsList({ 
-  onSelectContact, 
+export function ContactsList({
+  onSelectContact,
+  onStartConversation,
   selectedContactId,
-  onStartConversation 
+  currentUserId,
+  isMobile,
 }: ContactsListProps) {
   const [contacts, setContacts] = useState<UserContact[]>([])
   const [allAvailableUsers, setAllAvailableUsers] = useState<UserProfile[]>([])
@@ -140,7 +144,7 @@ export function ContactsList({
     contact.contact?.username?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const getInitials = (name: string | null) => {
+  const getInitials = (name: string | null | undefined) => {
     if (!name) return "?"
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   }

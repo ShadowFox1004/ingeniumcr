@@ -112,7 +112,7 @@ export function ChatWindow({
     scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight
   }, [messages])
 
-  const getInitials = (name: string | null) => {
+  const getInitials = (name: string | null | undefined) => {
     if (!name) return "?"
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   }
@@ -229,8 +229,8 @@ export function ChatWindow({
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 min-h-0" viewportRef={scrollViewportRef}>
-        <div className="p-4">
+      <ScrollArea className="flex-1 min-h-0">
+        <div ref={scrollViewportRef} className="h-full overflow-y-auto p-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
