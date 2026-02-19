@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -13,9 +14,10 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createClient()
+    const adminSupabase = createAdminClient()
 
-    // Check if profile already exists
-    const { data: existingProfile } = await supabase
+    // Check if profile already exists using admin client
+    const { data: existingProfile } = await adminSupabase
       .from('user_profiles')
       .select('id')
       .eq('id', userId)
@@ -29,8 +31,8 @@ export async function POST(request: Request) {
       })
     }
 
-    // Create new profile
-    const { data: profile, error } = await supabase
+    // Create new profile using admin client
+    const { data: profile, error } = await adminSupabase
       .from('user_profiles')
       .insert({
         id: userId,
