@@ -112,10 +112,23 @@ export async function POST(request: Request) {
     const supabase = await createClient()
     const { contactId } = await request.json()
     
+    console.log('🔍 Creating conversation:', { contactId })
+
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
+      console.error('❌ Auth error:', authError)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    console.log('🔍 Current user:', { userId: user.id, contactId })
+
+    if (!contactId) {
+      console.error('❌ No contactId provided')
+      return NextResponse.json(
+        { error: 'Contact ID required' }, 
+        { status: 400 }
+      )
     }
 
     // Use the database function to get or create conversation
@@ -126,13 +139,15 @@ export async function POST(request: Request) {
       })
 
     if (error) {
-      console.error('Error creating conversation:', error)
+      console.error('❌ Error creating conversation:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    console.log('✅ Conversation created/retrieved:', { conversationId })
+
     return NextResponse.json({ conversationId })
   } catch (error) {
-    console.error('Error in POST /api/chat/conversations:', error)
+    console.error('❌ Error in POST /api/chat/conversations:', error)
     return NextResponse.json(
       { error: 'Internal server error' }, 
       { status: 500 }
