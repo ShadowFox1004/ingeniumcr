@@ -154,13 +154,15 @@ export function ChatWindow({
   const formatMessageTime = (timestamp: string) => {
     const date = new Date(timestamp)
     
-    // Format directly using timezone - this should work correctly
-    return date.toLocaleTimeString('es-ES', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: true, // Change to AM/PM format
-      timeZone: userTimezone
+    // Use exact same formatting as console - this should match local time
+    const localTimeString = date.toLocaleString('es-ES', { 
+      timeZone: userTimezone 
     })
+    
+    // Extract just the time part from the local string
+    const timePart = localTimeString.split(', ')[1] || localTimeString
+    
+    return timePart.trim()
   }
 
   const groupMessagesByDate = (messages: Message[]) => {
