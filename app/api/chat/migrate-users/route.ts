@@ -27,8 +27,8 @@ export async function POST(request: Request) {
     // Create profiles for users who don't have one
     for (const user of users) {
       try {
-        // Check if profile already exists
-        const { data: existingProfile } = await supabase
+        // Check if profile already exists using admin client
+        const { data: existingProfile } = await adminSupabase
           .from('user_profiles')
           .select('id')
           .eq('id', user.id)
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         const username = user.email?.split('@')[0] || 'user'
         const fullName = user.user_metadata?.full_name || username
 
-        const { error: insertError } = await supabase
+        const { error: insertError } = await adminSupabase
           .from('user_profiles')
           .insert({
             id: user.id,
