@@ -36,6 +36,15 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Debug logging
+  console.log('🔍 ChatWindow state:', { 
+    conversationId, 
+    contactId: contact?.id, 
+    currentUserId,
+    hasContact: !!contact,
+    hasConversationId: !!conversationId 
+  })
+
   const fetchMessages = async () => {
     if (!conversationId) return
     
@@ -54,6 +63,14 @@ export function ChatWindow({
 
   const sendMessage = async (e: FormEvent) => {
     e.preventDefault()
+    
+    console.log('🔍 sendMessage called:', { 
+      inputMessage: inputMessage.trim(), 
+      conversationId, 
+      isSending,
+      canSend: !!(inputMessage.trim() && conversationId && !isSending)
+    })
+    
     if (!inputMessage.trim() || !conversationId || isSending) return
 
     setIsSending(true)
@@ -71,9 +88,12 @@ export function ChatWindow({
       if (response.ok) {
         setInputMessage('')
         await fetchMessages()
+      } else {
+        const errorData = await response.json()
+        console.error('❌ Error sending message:', errorData)
       }
     } catch (error) {
-      console.error('Error sending message:', error)
+      console.error('❌ Network error sending message:', error)
     } finally {
       setIsSending(false)
     }
@@ -326,12 +346,19 @@ export function ChatWindow({
             placeholder="Escribe un mensaje..."
             className="flex-1"
             disabled={!conversationId || isSending}
+            onFocus={() => console.log('🔍 Input focused:', { conversationId, isSending })}
+            onChangeCapture={(e) => console.log('🔍 Input changed:', (e.target as HTMLInputElement).value)}
           />
           
           <Button 
             type="submit" 
             size="icon"
             disabled={!inputMessage.trim() || !conversationId || isSending}
+            onClick={() => console.log('🔍 Send button clicked:', { 
+              inputMessage: inputMessage.trim(), 
+              conversationId, 
+              isSending 
+            })}
           >
             <Send className="h-5 w-5" />
           </Button>
