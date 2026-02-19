@@ -7,6 +7,8 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code")
   const origin = requestUrl.origin
 
+  console.log('🔍 Supabase callback attempt:', { hasCode: !!code, origin })
+
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
@@ -16,6 +18,8 @@ export async function GET(request: NextRequest) {
       // Redirect to error page if verification fails
       return NextResponse.redirect(`${origin}/auth/verify-email?error=verification_failed`)
     }
+
+    console.log('✅ Supabase callback successful - redirecting to verification-success')
   }
 
   return NextResponse.redirect(`${origin}/auth/verification-success`)
