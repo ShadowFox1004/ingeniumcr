@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 
 // GET /api/chat/conversations - Get all conversations for current user
@@ -110,6 +111,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const supabase = await createClient()
+    const adminSupabase = createAdminClient()
     const { contactId } = await request.json()
     
     console.log('🔍 Creating conversation:', { contactId })
@@ -131,8 +133,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Use the database function to get or create conversation
-    const { data: conversationId, error } = await supabase
+    // Use admin client to bypass RLS for conversation creation
+    const { data: conversationId, error } = await adminSupabase
       .rpc('get_or_create_conversation', {
         user1: user.id,
         user2: contactId
