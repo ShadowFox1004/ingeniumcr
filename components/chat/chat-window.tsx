@@ -141,8 +141,10 @@ export function ChatWindow({
     const date = new Date(timestamp)
     const now = new Date()
     
-    // Get user's timezone automatically
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    // Get user's timezone automatically, fallback to Dominican Republic if detection fails
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Santo_Domingo'
+    
+    console.log('🔍 Detected timezone:', userTimezone)
     
     // Format using user's detected timezone
     const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
