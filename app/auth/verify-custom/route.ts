@@ -39,8 +39,8 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient()
     const adminSupabase = createAdminClient()
 
-    // Verificar el usuario y confirmar el email
-    const { data: { user }, error: userError } = await supabase.auth.getUser(userId)
+    // Verificar el usuario usando admin client (no necesita JWT)
+    const { data: { user }, error: userError } = await adminSupabase.auth.admin.getUserById(userId)
 
     if (userError || !user) {
       console.error('❌ User not found:', userError)
@@ -64,16 +64,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/auth/verify-email?error=confirmation_failed`)
     }
 
-    // Obtener el usuario actualizado para verificar
-    const { data: { user: confirmedUser }, error: fetchError } = await supabase.auth.getUser(userId)
-    
-    if (fetchError || !confirmedUser || !confirmedUser.email_confirmed_at) {
-      console.error('❌ Email confirmation failed:', fetchError)
-      return NextResponse.redirect(`${origin}/auth/verify-email?error=confirmation_failed`)
-    }
-
     console.log('✅ Email confirmed successfully for user:', userId)
-    console.log('✅ User email_confirmed_at:', confirmedUser.email_confirmed_at)
     
     return NextResponse.redirect(`${origin}/auth/verification-success`)
 
