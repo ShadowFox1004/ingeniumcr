@@ -111,7 +111,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col bg-background">
+    <div className="h-[calc(100vh-4rem)] flex flex-col bg-background overflow-hidden">
       {/* Header */}
       <div className="border-b px-6 py-4 flex items-center justify-between bg-card">
         <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ export default function ChatPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Contacts Panel */}
         <div 
           className={`${
@@ -140,6 +140,8 @@ export default function ChatPage() {
             onSelectContact={handleSelectContact}
             selectedContactId={selectedContact?.id}
             onStartConversation={handleStartConversation}
+            currentUserId={currentUserId}
+            isMobile={isMobileView}
           />
         </div>
 

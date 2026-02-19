@@ -28,7 +28,7 @@ export default function AIAssistantPage() {
           </div>
 
           {/* Side Panel */}
-          <div className="flex-[1.2] max-w-md space-y-6 overflow-y-auto">
+          <div className="flex-[1.2] max-w-md space-y-6 overflow-hidden">
             
             <Card>
               <CardHeader>
