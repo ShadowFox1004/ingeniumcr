@@ -36,11 +36,12 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Get timezone once - fallback to user's actual timezone
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Guyana'
+  // Get timezone once - force Dominican Republic timezone
+  const userTimezone = 'America/Santo_Domingo'
   
   // Debug logging - only log when important props change
   useEffect(() => {
+    const now = new Date()
     console.log('🔍 ChatWindow state changed:', { 
       conversationId, 
       contactId: contact?.id, 
@@ -49,7 +50,14 @@ export function ChatWindow({
       hasConversationId: !!conversationId,
       timezone: userTimezone,
       detectedTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      currentTime: new Date().toLocaleString('es-ES', { timeZone: userTimezone })
+      currentTime: new Date().toLocaleString('es-ES', { timeZone: userTimezone }),
+      rawTime: now.toISOString(),
+      localTime: now.toLocaleString('es-ES'),
+      debugInfo: {
+        utcHours: now.getUTCHours(),
+        localHours: now.getHours(),
+        timezoneOffset: now.getTimezoneOffset()
+      }
     })
   }, [conversationId, contact?.id, currentUserId, userTimezone])
 
