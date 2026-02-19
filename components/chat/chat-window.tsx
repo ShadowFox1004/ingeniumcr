@@ -141,9 +141,12 @@ export function ChatWindow({
     const date = new Date(timestamp)
     const now = new Date()
     
-    // Adjust for local timezone
-    const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
-    const localNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000))
+    // Get user's timezone automatically
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    
+    // Format using user's detected timezone
+    const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
+    const localNow = new Date(now.toLocaleString("en-US", { timeZone: userTimezone }))
     
     const isToday = localDate.toDateString() === localNow.toDateString()
     
@@ -151,7 +154,8 @@ export function ChatWindow({
       return localDate.toLocaleTimeString('es-ES', { 
         hour: '2-digit', 
         minute: '2-digit',
-        hour12: false
+        hour12: false,
+        timeZone: userTimezone
       })
     }
     
@@ -160,17 +164,21 @@ export function ChatWindow({
       month: 'short',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
+      timeZone: userTimezone
     })
   }
 
   const groupMessagesByDate = (messages: Message[]) => {
     const groups: { date: string; messages: Message[] }[] = []
     
+    // Get user's timezone automatically
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    
     messages.forEach((message) => {
       const date = new Date(message.created_at)
-      // Adjust for local timezone
-      const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+      // Format using user's detected timezone
+      const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
       const dateString = localDate.toDateString()
       
       const existingGroup = groups.find(g => g.date === dateString)
@@ -282,12 +290,15 @@ export function ChatWindow({
                   <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
                     {(() => {
                       const date = new Date(group.date)
-                      // Adjust for local timezone
-                      const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+                      // Get user's timezone automatically
+                      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+                      // Format using user's detected timezone
+                      const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
                       return localDate.toLocaleDateString('es-ES', { 
                         weekday: 'long', 
                         day: 'numeric', 
-                        month: 'long' 
+                        month: 'long',
+                        timeZone: userTimezone
                       })
                     })()}
                   </span>
