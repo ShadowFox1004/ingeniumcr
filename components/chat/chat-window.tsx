@@ -140,20 +140,27 @@ export function ChatWindow({
   const formatMessageTime = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
-    const isToday = date.toDateString() === now.toDateString()
+    
+    // Adjust for local timezone
+    const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+    const localNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000))
+    
+    const isToday = localDate.toDateString() === localNow.toDateString()
     
     if (isToday) {
-      return date.toLocaleTimeString('es-ES', { 
+      return localDate.toLocaleTimeString('es-ES', { 
         hour: '2-digit', 
-        minute: '2-digit' 
+        minute: '2-digit',
+        hour12: false
       })
     }
     
-    return date.toLocaleDateString('es-ES', { 
+    return localDate.toLocaleDateString('es-ES', { 
       day: 'numeric',
       month: 'short',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     })
   }
 
@@ -161,13 +168,17 @@ export function ChatWindow({
     const groups: { date: string; messages: Message[] }[] = []
     
     messages.forEach((message) => {
-      const date = new Date(message.created_at).toDateString()
-      const existingGroup = groups.find(g => g.date === date)
+      const date = new Date(message.created_at)
+      // Adjust for local timezone
+      const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+      const dateString = localDate.toDateString()
+      
+      const existingGroup = groups.find(g => g.date === dateString)
       
       if (existingGroup) {
         existingGroup.messages.push(message)
       } else {
-        groups.push({ date, messages: [message] })
+        groups.push({ date: dateString, messages: [message] })
       }
     })
     
@@ -269,11 +280,16 @@ export function ChatWindow({
                 {/* Date separator */}
                 <div className="flex items-center justify-center">
                   <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
-                    {new Date(group.date).toLocaleDateString('es-ES', { 
-                      weekday: 'long', 
-                      day: 'numeric', 
-                      month: 'long' 
-                    })}
+                    {(() => {
+                      const date = new Date(group.date)
+                      // Adjust for local timezone
+                      const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
+                      return localDate.toLocaleDateString('es-ES', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long' 
+                      })
+                    })()}
                   </span>
                 </div>
                 
