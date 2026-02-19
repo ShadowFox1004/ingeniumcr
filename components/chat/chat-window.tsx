@@ -153,29 +153,12 @@ export function ChatWindow({
 
   const formatMessageTime = (timestamp: string) => {
     const date = new Date(timestamp)
-    const now = new Date()
     
-    // Format using user's detected timezone
-    const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
-    const localNow = new Date(now.toLocaleString("en-US", { timeZone: userTimezone }))
-    
-    const isToday = localDate.toDateString() === localNow.toDateString()
-    
-    if (isToday) {
-      return localDate.toLocaleTimeString('es-ES', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false,
-        timeZone: userTimezone
-      })
-    }
-    
-    return localDate.toLocaleDateString('es-ES', { 
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
+    // Format directly using timezone - this should work correctly
+    return date.toLocaleTimeString('es-ES', { 
+      hour: '2-digit', 
       minute: '2-digit',
-      hour12: false,
+      hour12: true, // Change to AM/PM format
       timeZone: userTimezone
     })
   }
@@ -185,9 +168,10 @@ export function ChatWindow({
     
     messages.forEach((message) => {
       const date = new Date(message.created_at)
-      // Format using user's detected timezone
-      const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
-      const dateString = localDate.toDateString()
+      // Get date string in user's timezone
+      const dateString = date.toLocaleDateString('es-ES', { 
+        timeZone: userTimezone 
+      })
       
       const existingGroup = groups.find(g => g.date === dateString)
       
@@ -298,9 +282,7 @@ export function ChatWindow({
                   <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
                     {(() => {
                       const date = new Date(group.date)
-                      // Format using user's detected timezone
-                      const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
-                      return localDate.toLocaleDateString('es-ES', { 
+                      return date.toLocaleDateString('es-ES', { 
                         weekday: 'long', 
                         day: 'numeric', 
                         month: 'long',
