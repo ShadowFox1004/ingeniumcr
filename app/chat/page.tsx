@@ -7,6 +7,7 @@ import { ContactsList } from "@/components/chat/contacts-list"
 import { ChatWindow } from "@/components/chat/chat-window"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, Users } from "lucide-react"
+import { usePresence } from "@/hooks/use-presence"
 import type { UserProfile } from "@/lib/types"
 
 export default function ChatPage() {
@@ -16,6 +17,9 @@ export default function ChatPage() {
   const [isMobileView, setIsMobileView] = useState(false)
   const [showContacts, setShowContacts] = useState(true)
   const router = useRouter()
+
+  // Initialize presence system for real-time status
+  usePresence()
 
   useEffect(() => {
     const checkAuth = async () => {
