@@ -36,6 +36,9 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Get timezone once
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Santo_Domingo'
+  
   // Debug logging - only log when important props change
   useEffect(() => {
     console.log('🔍 ChatWindow state changed:', { 
@@ -43,9 +46,10 @@ export function ChatWindow({
       contactId: contact?.id, 
       currentUserId,
       hasContact: !!contact,
-      hasConversationId: !!conversationId 
+      hasConversationId: !!conversationId,
+      timezone: userTimezone
     })
-  }, [conversationId, contact?.id, currentUserId])
+  }, [conversationId, contact?.id, currentUserId, userTimezone])
 
   const fetchMessages = async () => {
     if (!conversationId) return
@@ -141,11 +145,6 @@ export function ChatWindow({
     const date = new Date(timestamp)
     const now = new Date()
     
-    // Get user's timezone automatically, fallback to Dominican Republic if detection fails
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Santo_Domingo'
-    
-    console.log('🔍 Detected timezone:', userTimezone)
-    
     // Format using user's detected timezone
     const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
     const localNow = new Date(now.toLocaleString("en-US", { timeZone: userTimezone }))
@@ -173,9 +172,6 @@ export function ChatWindow({
 
   const groupMessagesByDate = (messages: Message[]) => {
     const groups: { date: string; messages: Message[] }[] = []
-    
-    // Get user's timezone automatically
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
     
     messages.forEach((message) => {
       const date = new Date(message.created_at)
@@ -292,8 +288,6 @@ export function ChatWindow({
                   <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
                     {(() => {
                       const date = new Date(group.date)
-                      // Get user's timezone automatically
-                      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
                       // Format using user's detected timezone
                       const localDate = new Date(date.toLocaleString("en-US", { timeZone: userTimezone }))
                       return localDate.toLocaleDateString('es-ES', { 
