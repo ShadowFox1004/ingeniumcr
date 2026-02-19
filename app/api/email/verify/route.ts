@@ -41,9 +41,12 @@ export async function POST(request: Request) {
       )
     }
 
-    // Crear URL de verificación
+    // Crear URL de verificación usando el sistema de Supabase
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const verificationUrl = `${baseUrl}/auth/callback?token=${userId}&type=signup`
+    
+    // Generar un token de verificación simple (en producción, usa algo más seguro)
+    const verificationToken = Buffer.from(`${userId}:${email}:${Date.now()}`).toString('base64')
+    const verificationUrl = `${baseUrl}/auth/verify-custom?token=${verificationToken}`
 
     // Enviar email con plantilla personalizada
     const template = emailTemplates.verificationEmail(verificationUrl, username)

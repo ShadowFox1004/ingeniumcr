@@ -37,8 +37,7 @@ export default function SignUpPage() {
         ? window.location.origin 
         : 'https://ingeniumcrdash.vercel.app'
 
-      // Create user - Supabase will send verification email automatically
-      // Make sure to configure SMTP in Supabase Dashboard for custom email sending
+      // Create user with metadata
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -52,7 +51,46 @@ export default function SignUpPage() {
       
       if (signUpError) throw signUpError
       
-      // User created successfully - Supabase handles verification email
+      if (data.user) {
+        // Send custom verification email using our endpoint
+        const username = email.split('@')[0]
+        
+        try {
+          console.log('📧 Enviando email de verificación:', { email, username, userId: data.user.id })
+          
+          const verificationResponse = await fetch('/api/email/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              username,
+              userId: data.user.id,
+            }),
+          })
+
+          console.log('📧 Response status:', verificationResponse.status)
+
+          if (!verificationResponse.ok) {
+            let errorData
+            try {
+              errorData = await verificationResponse.json()
+              console.error('📧 Error response:', errorData)
+            } catch {
+              errorData = { error: `HTTP ${verificationResponse.status}` }
+              console.error('📧 No JSON response, status:', verificationResponse.status)
+            }
+            console.error('📧 Error sending verification email:', errorData)
+            // Continue anyway - user is created
+          } else {
+            const successData = await verificationResponse.json()
+            console.log('📧 Email enviado exitosamente:', successData)
+          }
+        } catch (fetchError) {
+          console.error('📧 Network error sending verification:', fetchError)
+          // Continue - user was created even if email fails
+        }
+      }
+      
       router.push("/auth/sign-up-success")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Error al crear cuenta")

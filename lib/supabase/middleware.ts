@@ -36,6 +36,8 @@ export async function updateSession(request: NextRequest) {
     "/auth/callback",
     "/auth/verify-email",
     "/auth/verification-success",
+    "/auth/verify-custom",
+    "/api",
   ]
   const isPublicPath = publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))
 
