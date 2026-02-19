@@ -138,16 +138,10 @@ export function ChatWindow({
   }
 
   const formatMessageTime = (timestamp: string) => {
-    const date = new Date(timestamp)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('🕒 message time debug', {
-        timestamp,
-        parsedIso: date.toISOString(),
-        local: date.toLocaleString('es-ES'),
-        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        offsetMinutes: date.getTimezoneOffset(),
-      })
-    }
+    const ts = timestamp.includes('Z') || /[+-]\d{2}:\d{2}$/.test(timestamp)
+      ? timestamp
+      : `${timestamp}Z`
+    const date = new Date(ts)
     return date.toLocaleTimeString('es-ES', {
       hour: '2-digit',
       minute: '2-digit',
