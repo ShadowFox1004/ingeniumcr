@@ -16,14 +16,25 @@ export async function POST(request: Request) {
     const supabase = await createClient()
     const adminSupabase = createAdminClient()
 
+    console.log('🔧 Creating profile with admin client:', { userId, username })
+
     // Check if profile already exists using admin client
-    const { data: existingProfile } = await adminSupabase
+    const { data: existingProfile, error: checkError } = await adminSupabase
       .from('user_profiles')
       .select('id')
       .eq('id', userId)
       .single()
 
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('❌ Error checking existing profile:', checkError)
+      return NextResponse.json(
+        { error: 'Failed to check existing profile', details: checkError.message },
+        { status: 500 }
+      )
+    }
+
     if (existingProfile) {
+      console.log('✅ Profile already exists:', existingProfile)
       return NextResponse.json({
         success: true,
         message: 'Profile already exists',
@@ -32,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     // Create new profile using admin client
-    const { data: profile, error } = await adminSupabase
+    const { data: profile, error: insertError } = await adminSupabase
       .from('user_profiles')
       .insert({
         id: userId,
@@ -44,10 +55,10 @@ export async function POST(request: Request) {
       .select()
       .single()
 
-    if (error) {
-      console.error('Error creating user profile:', error)
+    if (insertError) {
+      console.error('❌ Error creating profile:', insertError)
       return NextResponse.json(
-        { error: 'Failed to create profile', details: error.message },
+        { error: 'Failed to create profile', details: insertError.message },
         { status: 500 }
       )
     }
