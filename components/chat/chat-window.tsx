@@ -33,7 +33,7 @@ export function ChatWindow({
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSending, setIsSending] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollViewportRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
   const fetchMessages = async () => {
@@ -108,9 +108,8 @@ export function ChatWindow({
 
   // Auto-scroll to bottom
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-    }
+    if (!scrollViewportRef.current) return
+    scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight
   }, [messages])
 
   const getInitials = (name: string | null) => {
@@ -178,7 +177,7 @@ export function ChatWindow({
   const messageGroups = groupMessagesByDate(messages)
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full bg-background min-h-0">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b bg-background">
         <div className="flex items-center gap-3">
@@ -230,7 +229,8 @@ export function ChatWindow({
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      <ScrollArea className="flex-1 min-h-0" viewportRef={scrollViewportRef}>
+        <div className="p-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -319,6 +319,7 @@ export function ChatWindow({
             ))}
           </div>
         )}
+        </div>
       </ScrollArea>
 
       {/* Input */}
