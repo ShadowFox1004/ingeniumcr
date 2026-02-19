@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -36,6 +37,7 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = await createClient()
+    const adminSupabase = createAdminClient()
 
     // Verificar el usuario y confirmar el email
     const { data: { user }, error: userError } = await supabase.auth.getUser(userId)
@@ -52,8 +54,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/auth/verify-email?error=email_mismatch`)
     }
 
-    // Confirmar el email del usuario
-    const { error: updateError } = await supabase.auth.admin.updateUserById(userId, {
+    // Confirmar el email del usuario usando admin client
+    const { error: updateError } = await adminSupabase.auth.admin.updateUserById(userId, {
       email_confirm: true
     })
 
