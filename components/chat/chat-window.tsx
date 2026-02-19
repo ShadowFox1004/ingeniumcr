@@ -36,30 +36,16 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Get timezone once - force Dominican Republic timezone
-  const userTimezone = 'America/Santo_Domingo'
-  
   // Debug logging - only log when important props change
   useEffect(() => {
-    const now = new Date()
-    console.log('🔍 ChatWindow state changed:', { 
-      conversationId, 
-      contactId: contact?.id, 
+    console.log('🔍 ChatWindow state changed:', {
+      conversationId,
+      contactId: contact?.id,
       currentUserId,
       hasContact: !!contact,
       hasConversationId: !!conversationId,
-      timezone: userTimezone,
-      detectedTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      currentTime: new Date().toLocaleString('es-ES', { timeZone: userTimezone }),
-      rawTime: now.toISOString(),
-      localTime: now.toLocaleString('es-ES'),
-      debugInfo: {
-        utcHours: now.getUTCHours(),
-        localHours: now.getHours(),
-        timezoneOffset: now.getTimezoneOffset()
-      }
     })
-  }, [conversationId, contact?.id, currentUserId, userTimezone])
+  }, [conversationId, contact?.id, currentUserId])
 
   const fetchMessages = async () => {
     if (!conversationId) return
@@ -153,16 +139,11 @@ export function ChatWindow({
 
   const formatMessageTime = (timestamp: string) => {
     const date = new Date(timestamp)
-    
-    // Use exact same formatting as console - this should match local time
-    const localTimeString = date.toLocaleString('es-ES', { 
-      timeZone: userTimezone 
+    return date.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     })
-    
-    // Extract just the time part from the local string
-    const timePart = localTimeString.split(', ')[1] || localTimeString
-    
-    return timePart.trim()
   }
 
   const groupMessagesByDate = (messages: Message[]) => {
@@ -170,10 +151,7 @@ export function ChatWindow({
     
     messages.forEach((message) => {
       const date = new Date(message.created_at)
-      // Get date string in user's timezone
-      const dateString = date.toLocaleDateString('es-ES', { 
-        timeZone: userTimezone 
-      })
+      const dateString = date.toLocaleDateString('es-ES')
       
       const existingGroup = groups.find(g => g.date === dateString)
       
@@ -287,8 +265,7 @@ export function ChatWindow({
                       return date.toLocaleDateString('es-ES', { 
                         weekday: 'long', 
                         day: 'numeric', 
-                        month: 'long',
-                        timeZone: userTimezone
+                        month: 'long'
                       })
                     })()}
                   </span>
