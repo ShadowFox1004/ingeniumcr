@@ -54,8 +54,9 @@ export async function POST(request: Request) {
           })
 
         if (insertError) {
-          errors.push({ userId: user.id, error: insertError.message })
-          console.error(`Error creating profile for user ${user.id}:`, insertError)
+          const errorMessage = `${insertError.message} (Code: ${insertError.code || 'unknown'})`
+          errors.push({ userId: user.id, error: errorMessage })
+          console.error(`❌ Error creating profile for user ${user.id} (${user.email}):`, insertError)
         } else {
           createdProfiles++
           console.log(`✅ Created profile for user: ${user.email}`)
