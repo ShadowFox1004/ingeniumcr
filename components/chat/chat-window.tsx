@@ -36,14 +36,16 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Debug logging
-  console.log('🔍 ChatWindow state:', { 
-    conversationId, 
-    contactId: contact?.id, 
-    currentUserId,
-    hasContact: !!contact,
-    hasConversationId: !!conversationId 
-  })
+  // Debug logging - only log when important props change
+  useEffect(() => {
+    console.log('🔍 ChatWindow state changed:', { 
+      conversationId, 
+      contactId: contact?.id, 
+      currentUserId,
+      hasContact: !!contact,
+      hasConversationId: !!conversationId 
+    })
+  }, [conversationId, contact?.id, currentUserId])
 
   const fetchMessages = async () => {
     if (!conversationId) return
@@ -346,19 +348,12 @@ export function ChatWindow({
             placeholder="Escribe un mensaje..."
             className="flex-1"
             disabled={!conversationId || isSending}
-            onFocus={() => console.log('🔍 Input focused:', { conversationId, isSending })}
-            onChangeCapture={(e) => console.log('🔍 Input changed:', (e.target as HTMLInputElement).value)}
           />
           
           <Button 
             type="submit" 
             size="icon"
             disabled={!inputMessage.trim() || !conversationId || isSending}
-            onClick={() => console.log('🔍 Send button clicked:', { 
-              inputMessage: inputMessage.trim(), 
-              conversationId, 
-              isSending 
-            })}
           >
             <Send className="h-5 w-5" />
           </Button>
