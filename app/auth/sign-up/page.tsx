@@ -52,6 +52,29 @@ export default function SignUpPage() {
       if (signUpError) throw signUpError
       
       if (data.user) {
+        // Create user profile in user_profiles table
+        try {
+          const profileResponse = await fetch('/api/chat/create-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: data.user.id,
+              username: email.split('@')[0],
+              fullName: email.split('@')[0],
+              email: email,
+            }),
+          })
+
+          if (!profileResponse.ok) {
+            const profileError = await profileResponse.json()
+            console.error('❌ Error creating user profile:', profileError)
+          } else {
+            console.log('✅ User profile created successfully')
+          }
+        } catch (profileError) {
+          console.error('❌ Network error creating profile:', profileError)
+        }
+
         // Send custom verification email using our endpoint
         const username = email.split('@')[0]
         
