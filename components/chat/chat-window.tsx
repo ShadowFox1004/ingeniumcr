@@ -36,17 +36,6 @@ export function ChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null)
   const pollingRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Debug logging - only log when important props change
-  useEffect(() => {
-    console.log('🔍 ChatWindow state changed:', {
-      conversationId,
-      contactId: contact?.id,
-      currentUserId,
-      hasContact: !!contact,
-      hasConversationId: !!conversationId,
-    })
-  }, [conversationId, contact?.id, currentUserId])
-
   const fetchMessages = async () => {
     if (!conversationId) return
     
