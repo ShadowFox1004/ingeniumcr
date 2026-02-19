@@ -62,7 +62,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/auth/verify-email?error=confirmation_failed`)
     }
 
+    // Obtener el usuario actualizado para verificar
+    const { data: { user: confirmedUser }, error: fetchError } = await supabase.auth.getUser(userId)
+    
+    if (fetchError || !confirmedUser || !confirmedUser.email_confirmed_at) {
+      console.error('❌ Email confirmation failed:', fetchError)
+      return NextResponse.redirect(`${origin}/auth/verify-email?error=confirmation_failed`)
+    }
+
     console.log('✅ Email confirmed successfully for user:', userId)
+    console.log('✅ User email_confirmed_at:', confirmedUser.email_confirmed_at)
+    
     return NextResponse.redirect(`${origin}/auth/verification-success`)
 
   } catch (error) {
