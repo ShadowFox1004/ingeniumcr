@@ -11,16 +11,16 @@ import { usePathname } from "next/navigation"
 export function AppHeader() {
   const pathname = usePathname()
 
-  // Don't show header on login page
-  if (pathname === "/login") {
+  // Don't show header on marketing pages
+  if (pathname === "/login" || pathname === "/") {
     return null
   }
 
   return (
     <header className="border-b border-border/40 bg-card/80 backdrop-blur-xl shadow-lg sticky top-0 z-50 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
-          <div className="absolute left-0 ml-5">
+        <div className="relative h-16">
+          <div className="absolute left-[5px] top-1/2 -translate-y-1/2">
             <Link href="/" className="flex items-center gap-3 sm:gap-4">
               <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20 flex-shrink-0">
                 <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
@@ -30,17 +30,18 @@ export function AppHeader() {
                   IngeniumCR
                 </h1>
                 <p className="text-[10px] sm:text-xs text-muted-foreground font-medium hidden sm:block">
-                  Sistema de Mantenimiento Industrial
+                  Mantenimiento Industrial
                 </p>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-2 ml-40">
-            <Link href="/">
+          
+          <nav className="absolute right-[5px] top-1/2 -translate-y-1/2 hidden lg:flex items-center gap-2">
+            <Link href="/dashboard">
               <Button
-                variant={pathname === "/" ? "default" : "ghost"}
+                variant={pathname === "/dashboard" ? "default" : "ghost"}
                 size="sm"
                 className="font-medium hover:bg-primary/10"
               >

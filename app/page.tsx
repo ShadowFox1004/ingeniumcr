@@ -1,106 +1,137 @@
-import { Suspense } from "react"
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
-import { DashboardStats } from "@/components/dashboard-stats"
-import { MachineryStatus } from "@/components/machinery-status"
-import { MaintenanceSchedule } from "@/components/maintenance-schedule"
-import { AlertTriangle, Wrench, Gauge, TrendingUp } from "lucide-react"
-import { SensorMonitoringDashboard } from "@/components/sensor-monitoring-dashboard"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, ShieldCheck, Wrench, LineChart, BellRing } from "lucide-react"
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/login")
-  }
-
-  // Fetch dashboard data
-  const [{ data: machinery }, { data: alerts }, { data: orders }, { data: sensors }] = await Promise.all([
-    supabase.from("machinery").select("*"),
-    supabase
-      .from("alerts")
-      .select("*, machinery(name)")
-      .eq("status", "active")
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("maintenance_orders")
-      .select("*, machinery(name)")
-      .order("scheduled_date", { ascending: true })
-      .limit(5),
-    supabase.from("sensors").select("*").limit(10),
-  ])
-
-  // Calculate stats
-  const totalMachinery = machinery?.length || 0
-  const operationalCount = machinery?.filter((m) => m.status === "operational").length || 0
-  const maintenanceCount = machinery?.filter((m) => m.status === "maintenance").length || 0
-  const warningCount = machinery?.filter((m) => m.status === "warning").length || 0
-  const activeAlerts = alerts?.length || 0
-  const pendingOrders = orders?.filter((o) => o.status === "pendiente").length || 0
-
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background relative">
-      <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
-      />
-      <div className="fixed inset-0 z-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95 backdrop-blur-[2px]" />
+    <div className="min-h-screen bg-background">
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
+          <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8">
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardStats
-              title="Total Maquinarias"
-              value={totalMachinery}
-              icon={<Gauge className="h-5 w-5" />}
-              description={`${operationalCount} operacionales`}
-              trend="neutral"
-              color="blue"
-            />
-            <DashboardStats
-              title="Alertas Activas"
-              value={activeAlerts}
-              icon={<AlertTriangle className="h-5 w-5" />}
-              description={`${warningCount} en advertencia`}
-              trend={activeAlerts > 0 ? "down" : "neutral"}
-              color="red"
-            />
-            <DashboardStats
-              title="Órdenes Pendientes"
-              value={pendingOrders}
-              icon={<Wrench className="h-5 w-5" />}
-              description={`${maintenanceCount} en mantenimiento`}
-              trend="neutral"
-              color="orange"
-            />
-            <DashboardStats
-              title="Eficiencia"
-              value={`${Math.round((operationalCount / totalMachinery) * 100)}%`}
-              icon={<TrendingUp className="h-5 w-5" />}
-              description="Disponibilidad operativa"
-              trend={operationalCount / totalMachinery > 0.8 ? "up" : "down"}
-              color="green"
-            />
+        <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-primary/15 border border-primary/20" />
+            <div className="leading-tight">
+              <div className="font-bold">IngeniumCR</div>
+              <div className="text-xs text-muted-foreground">Mantenimiento Industrial</div>
+            </div>
           </div>
-
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
-            <Suspense
-              fallback={
-                <div className="h-[400px] sm:h-[600px] bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 animate-pulse" />
-              }
-            >
-              <SensorMonitoringDashboard />
-            </Suspense>
-            <MachineryStatus machinery={machinery || []} />
+          <div className="flex items-center gap-2">
+            <Link href="/login">
+              <Button variant="ghost">Iniciar sesión</Button>
+            </Link>
+            <Link href="/auth/sign-up">
+              <Button>
+                Solicitar acceso
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
           </div>
+        </header>
 
-          <MaintenanceSchedule orders={orders || []} />
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-14 pt-6">
+          <section className="grid gap-10 lg:grid-cols-2 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs text-muted-foreground">
+                Monitoreo, alertas y planificación de mantenimiento
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+                Reduce paradas.
+                <span className="text-primary"> Aumenta disponibilidad.</span>
+              </h1>
+              <p className="text-muted-foreground text-base sm:text-lg max-w-xl">
+                IngeniumCR centraliza el estado de tus equipos, mantenimiento preventivo y alertas operativas para que tu
+                operación industrial se mantenga estable y medible.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/auth/sign-up">
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Ver demo / Empezar
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                    Ya tengo cuenta
+                  </Button>
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 gap-4 pt-4 max-w-lg">
+                <div className="rounded-xl border border-border/60 bg-card/50 p-4">
+                  <div className="text-2xl font-bold">+20%</div>
+                  <div className="text-xs text-muted-foreground">Mejor visibilidad operativa</div>
+                </div>
+                <div className="rounded-xl border border-border/60 bg-card/50 p-4">
+                  <div className="text-2xl font-bold">-30%</div>
+                  <div className="text-xs text-muted-foreground">Tiempo en respuesta a alertas</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-card/50 p-6 shadow-xl">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl border border-border/60 bg-background/40 p-4">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <BellRing className="h-4 w-4 text-primary" />
+                    Alertas en tiempo real
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">Detecta anomalías y prioriza lo crítico.</div>
+                </div>
+                <div className="rounded-xl border border-border/60 bg-background/40 p-4">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <Wrench className="h-4 w-4 text-primary" />
+                    Órdenes de trabajo
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">Planifica mantenimiento preventivo y correctivo.</div>
+                </div>
+                <div className="rounded-xl border border-border/60 bg-background/40 p-4">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <LineChart className="h-4 w-4 text-primary" />
+                    KPIs y métricas
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">Sigue disponibilidad, incidencias y eficiencia.</div>
+                </div>
+                <div className="rounded-xl border border-border/60 bg-background/40 p-4">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    Acceso seguro
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">Autenticación y control de acceso por usuario.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="mt-14">
+            <div className="rounded-2xl border border-border/60 bg-card/40 p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <h2 className="text-xl font-bold">¿Listo para modernizar tu mantenimiento?</h2>
+                <p className="text-muted-foreground mt-2 max-w-2xl">
+                  Crea una cuenta o inicia sesión para ver el dashboard y comenzar a registrar equipos, alertas y órdenes.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Link href="/auth/sign-up">
+                  <Button>Crear cuenta</Button>
+                </Link>
+                <Link href="/login">
+                  <Button variant="outline">Iniciar sesión</Button>
+                </Link>
+              </div>
+            </div>
+          </section>
         </main>
+
+        <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 text-xs text-muted-foreground">
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
+            <div>© {new Date().getFullYear()} IngeniumCR</div>
+            <div>Operación industrial con visibilidad y control.</div>
+          </div>
+        </footer>
       </div>
     </div>
   )

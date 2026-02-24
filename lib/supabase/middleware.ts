@@ -30,6 +30,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const publicPaths = [
+    "/",
     "/login",
     "/auth/sign-up",
     "/auth/sign-up-success",
@@ -58,7 +59,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect to dashboard if authenticated with verified email and on login page
   if (user && user.email_confirmed_at && request.nextUrl.pathname === "/login") {
     const url = request.nextUrl.clone()
-    url.pathname = "/"
+    url.pathname = "/dashboard"
     return NextResponse.redirect(url)
   }
 
