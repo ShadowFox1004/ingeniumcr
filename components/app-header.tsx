@@ -17,25 +17,27 @@ export function AppHeader() {
   }
 
   return (
-    <header className="border-b border-border/40 bg-card/80 backdrop-blur-xl shadow-lg sticky top-0 z-50">
+    <header className="border-b border-border/40 bg-card/80 backdrop-blur-xl shadow-lg sticky top-0 z-50 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20 flex-shrink-0">
-              <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent truncate">
-                IngeniumCR
-              </h1>
-              <p className="text-[10px] sm:text-xs text-muted-foreground font-medium hidden sm:block">
-                Sistema de Mantenimiento Industrial
-              </p>
-            </div>
-          </Link>
+          <div className="absolute left-0 ml-5">
+            <Link href="/" className="flex items-center gap-3 sm:gap-4">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-lg ring-2 ring-primary/20 flex-shrink-0">
+                <Image src="/images/cr-logo.jpg" alt="CR Logo" fill className="object-cover" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent truncate">
+                  IngeniumCR
+                </h1>
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-medium hidden sm:block">
+                  Sistema de Mantenimiento Industrial
+                </p>
+              </div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-2">
+          <nav className="hidden lg:flex items-center gap-2 ml-40">
             <Link href="/">
               <Button
                 variant={pathname === "/" ? "default" : "ghost"}
