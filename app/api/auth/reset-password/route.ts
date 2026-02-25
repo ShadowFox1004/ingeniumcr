@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { sendEmail, emailTemplates } from "@/lib/email"
 import { NextResponse } from "next/server"
 
 function getBaseUrl(req: Request) {
@@ -23,16 +24,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 })
     }
 
-    const supabase = await createClient()
-
     const baseUrl = getBaseUrl(req)
     const redirectTo = baseUrl ? `${baseUrl}/auth/reset-password` : undefined
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, redirectTo ? { redirectTo } : undefined)
+    const admin = createAdminClient()
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: redirectTo ? { redirectTo } : undefined,
+    } as any)
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+
+    const recoveryUrl = (data as any)?.properties?.action_link
+
+    if (!recoveryUrl || typeof recoveryUrl !== "string") {
+      return NextResponse.json({ error: "No se pudo generar el enlace de recuperación" }, { status: 500 })
     }
+
+    const template = await emailTemplates.passwordRecoveryEmail(recoveryUrl)
+
+    await sendEmail({
+      to: email,
+      ...template,
+    })
 
     return NextResponse.json({ ok: true })
   } catch {

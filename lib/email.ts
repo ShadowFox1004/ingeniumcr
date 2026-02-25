@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer'
+import { readFile } from 'fs/promises'
+import path from 'path'
 
 // Configuración del transporter SMTP
 const createTransporter = () => {
@@ -164,4 +166,18 @@ export const emailTemplates = {
       Accede al sistema: ${process.env.NEXT_PUBLIC_APP_URL}
     `,
   }),
+
+  passwordRecoveryEmail: async (recoveryUrl: string) => {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const templatePath = path.join(process.cwd(), 'email-templates', 'password-recovery-email.html')
+    const htmlTemplate = await readFile(templatePath, 'utf-8')
+
+    const html = htmlTemplate.replaceAll('{{APP_URL}}', appUrl).replaceAll('{{RECOVERY_URL}}', recoveryUrl)
+
+    return {
+      subject: 'Recupera tu contraseña - IngeniumCR',
+      html,
+      text: `Recibimos una solicitud para restablecer tu contraseña.\n\nAbre este enlace: ${recoveryUrl}\n\nSi no solicitaste este cambio, ignora este correo.`,
+    }
+  },
 }
