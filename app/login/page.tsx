@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { User, Lock } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -97,6 +98,12 @@ export default function LoginPage() {
                 required
                 className="pl-10 h-12 border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400"
               />
+            </div>
+
+            <div className="text-right">
+              <Link href="/auth/forgot-password" className="text-sm text-blue-500 hover:text-blue-600 hover:underline">
+                ¿Olvidaste tu contraseña?
+              </Link>
             </div>
 
             {/* Error Message */}
