@@ -27,6 +27,20 @@ export async function POST(req: Request) {
     const baseUrl = getBaseUrl(req)
     const redirectTo = baseUrl ? `${baseUrl}/auth/reset-password` : undefined
 
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: "Falta SUPABASE_SERVICE_ROLE_KEY en variables de entorno" },
+        { status: 500 }
+      )
+    }
+
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      return NextResponse.json(
+        { error: "Configuración SMTP incompleta (SMTP_HOST/SMTP_USER/SMTP_PASS)" },
+        { status: 500 }
+      )
+    }
+
     const admin = createAdminClient()
 
     const { data, error } = await admin.auth.admin.generateLink({
@@ -51,7 +65,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: "Error interno" }, { status: 500 })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error desconocido"
+    return NextResponse.json({ error: "Error interno", details: message }, { status: 500 })
   }
 }
