@@ -118,7 +118,9 @@ export function AppHeader() {
           </nav>
 
           {/* Mobile Navigation */}
-          <MobileNav />
+          <div className="absolute right-[5px] top-1/2 -translate-y-1/2 z-50 lg:hidden">
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>
